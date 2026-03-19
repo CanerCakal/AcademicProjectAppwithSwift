@@ -1,24 +1,19 @@
-//
-//  ContentView.swift
-//  AcademicProject
-//
-//  Created by Caner Çakal on 18.03.2026.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    // ViewModel'imizi burada tek bir defa oluşturuyoruz (StateObject)
+    @StateObject private var authViewModel = AuthViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            // Kullanıcı giriş yapmış mı?
+            if authViewModel.isAuthenticated {
+                DashboardView()
+            } else {
+                LoginView()
+            }
         }
-        .padding()
+        // Oluşturduğumuz bu viewModel'i tüm alt görünümlere (.environmentObject ile) paylaşıyoruz
+        .environmentObject(authViewModel)
     }
-}
-
-#Preview {
-    ContentView()
 }

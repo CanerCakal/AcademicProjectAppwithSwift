@@ -11,7 +11,7 @@ import FirebaseFirestore
 struct Project: Identifiable, Codable {
     @DocumentID var id: String?
     var title: String
-    var summury: String
+    var summary: String?
     var status: String
     var courseId: String
     var createdBy: String

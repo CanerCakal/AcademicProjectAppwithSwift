@@ -5,6 +5,8 @@ struct DashboardView: View {
     // Projeleri yönetecek sınıfımızı ekliyoruz
     @StateObject private var projectViewModel = ProjectViewModel()
     
+    @State private var showingAddProject = false
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -54,6 +56,26 @@ struct DashboardView: View {
                             }
                         }
                         .padding()
+                    }
+                    .overlay(
+                        // Sağ alt köşeye havada duran (Floating) + butonu ekliyoruz
+                        Button(action: {
+                            showingAddProject = true
+                        }) {
+                            Image(systemName: "plus")
+                                .font(.title.weight(.semibold))
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .clipShape(Circle())
+                                .shadow(radius: 4, x: 0, y: 4)
+                        }
+                            .padding(),
+                        alignment: .bottomTrailing
+                    )
+                    .sheet(isPresented: $showingAddProject) {
+                        // Butona basılınca açılacak sayfa
+                        AddProjectView(projectViewModel: projectViewModel)
                     }
                 }
             }

@@ -17,6 +17,7 @@
 		1090E7EE2F6C6A3300CE9E81 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7ED2F6C6A3300CE9E81 /* AuthViewModel.swift */; };
 		1090E7F12F6C6ECB00CE9E81 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */; };
 		1090E7F32F6C6EE500CE9E81 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */; };
+		1096C2202F6EC7F7001049D0 /* AddProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		1090E7ED2F6C6A3300CE9E81 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProjectView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -96,6 +98,7 @@
 			children = (
 				1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */,
 				1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */,
+				1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -182,6 +185,7 @@
 				1090E7E92F6C689E00CE9E81 /* Course.swift in Sources */,
 				1090E7EE2F6C6A3300CE9E81 /* AuthViewModel.swift in Sources */,
 				1090E7F32F6C6EE500CE9E81 /* DashboardView.swift in Sources */,
+				1096C2202F6EC7F7001049D0 /* AddProjectView.swift in Sources */,
 				1090E7E52F6C676500CE9E81 /* User.swift in Sources */,
 				107727CC2F6D7BEC0052302F /* ProjectViewModel.swift in Sources */,
 				1090E7E72F6C686000CE9E81 /* Department.swift in Sources */,

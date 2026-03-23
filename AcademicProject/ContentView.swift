@@ -8,7 +8,7 @@ struct ContentView: View {
         Group {
             // Kullanıcı giriş yapmış mı?
             if authViewModel.isAuthenticated {
-                DashboardView()
+                MainTabView()
             } else {
                 LoginView()
             }

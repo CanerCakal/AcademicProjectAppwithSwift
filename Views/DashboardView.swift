@@ -2,9 +2,10 @@ import SwiftUI
 
 struct DashboardView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    // Projeleri yönetecek sınıfımızı ekliyoruz
+    // Projeleri yönetecek sınıfımız
     @StateObject private var projectViewModel = ProjectViewModel()
     
+    // Yeni Proje Ekleme (Sheet) ekranının açılıp kapanmasını kontrol eden değişken
     @State private var showingAddProject = false
     
     var body: some View {
@@ -14,34 +15,6 @@ struct DashboardView: View {
                 Color(UIColor.systemGroupedBackground).ignoresSafeArea()
                 
                 VStack {
-                    // Üst Bilgi Alanı
-                    if let user = authViewModel.currentUser {
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("Hoş Geldin,")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                                Text(user.fullName)
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                            }
-                            Spacer()
-                            Button(action: { authViewModel.logout() }) {
-                                Text("Çıkış")
-                                    .font(.footnote)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.red.opacity(0.8))
-                                    .foregroundColor(.white)
-                                    .cornerRadius(8)
-                            }
-                        }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(12)
-                        .padding(.horizontal)
-                    }
-                    
                     // Projeler Listesi
                     ScrollView {
                         LazyVStack(spacing: 15) {
@@ -57,30 +30,35 @@ struct DashboardView: View {
                         }
                         .padding()
                     }
+                    // Yüzen "+" Butonu (Floating Action Button)
                     .overlay(
-                        // Sağ alt köşeye havada duran (Floating) + butonu ekliyoruz
-                        Button(action: {
-                            showingAddProject = true
-                        }) {
-                            Image(systemName: "plus")
-                                .font(.title.weight(.semibold))
+                        Group {
+                            // Kullanıcı giriş yapmış mı ve rolü 3 (Öğrenci) mü?
+                            if let user = authViewModel.currentUser, user.roleId == 3 {
+                                Button(action: {
+                                    showingAddProject = true
+                                }) {
+                                    Image(systemName: "plus")
+                                        .font(.title.weight(.semibold))
+                                        .padding()
+                                        .background(Color.blue)
+                                        .foregroundColor(.white)
+                                        .clipShape(Circle())
+                                        .shadow(radius: 4, x: 0, y: 4)
+                                }
                                 .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .clipShape(Circle())
-                                .shadow(radius: 4, x: 0, y: 4)
-                        }
-                            .padding(),
+                            }
+                        },
                         alignment: .bottomTrailing
                     )
+                    // Butona basıldığında aşağıdan açılacak form ekranı
                     .sheet(isPresented: $showingAddProject) {
-                        // Butona basılınca açılacak sayfa
                         AddProjectView(projectViewModel: projectViewModel)
                     }
                 }
             }
-            .navigationBarHidden(true)
-            // Ekran açılır açılmaz projeleri çek
+            .navigationTitle("Projeler") // Üstteki şık başlığımız
+            // Ekran ilk açıldığında projeleri veritabanından çekme isteği gönder
             .task {
                 await projectViewModel.fetchProjects()
             }
@@ -88,7 +66,7 @@ struct DashboardView: View {
     }
 }
 
-// Proje Kartı Tasarımı (Eski HTML projesindeki data-card mantığı)
+// Proje Kartı Tasarımı (Alt Görünüm)
 struct ProjectCardView: View {
     var project: Project
     
@@ -107,10 +85,12 @@ struct ProjectCardView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
             }
+            
+            // Eğer summary boş (nil) gelirse varsayılan metni göster
             Text(project.summary ?? "Bu proje için henüz bir özet girilmemiş.")
                 .font(.subheadline)
                 .foregroundColor(.gray)
-                .lineLimit(3)
+                .lineLimit(3) // Çok uzunsa 3 satırda keser
         }
         .padding()
         .background(Color.white)
@@ -118,7 +98,7 @@ struct ProjectCardView: View {
         .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
     
-    // Duruma göre renk veren yardımcı fonksiyon
+    // Projenin durumuna göre arkaplan rengi veren yardımcı fonksiyon
     func statusColor(for status: String) -> Color {
         switch status.lowercased() {
         case "approved": return .green

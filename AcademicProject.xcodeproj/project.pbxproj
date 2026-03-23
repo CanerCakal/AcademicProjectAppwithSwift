@@ -18,6 +18,7 @@
 		1090E7F12F6C6ECB00CE9E81 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */; };
 		1090E7F32F6C6EE500CE9E81 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */; };
 		1096C2202F6EC7F7001049D0 /* AddProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */; };
+		10C57C8F2F7198EA00A5FA47 /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */; };
 		10C737372F7146F100079621 /* CourseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C737362F7146F100079621 /* CourseViewModel.swift */; };
 		10C737392F714D1300079621 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C737382F714D1300079621 /* ProfileView.swift */; };
 		10C7373B2F71665A00079621 /* AdminPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C7373A2F71665A00079621 /* AdminPanelView.swift */; };
@@ -36,6 +37,7 @@
 		1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProjectView.swift; sourceTree = "<group>"; };
+		10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModel.swift; sourceTree = "<group>"; };
 		10C737362F7146F100079621 /* CourseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseViewModel.swift; sourceTree = "<group>"; };
 		10C737382F714D1300079621 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		10C7373A2F71665A00079621 /* AdminPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminPanelView.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				1090E7ED2F6C6A3300CE9E81 /* AuthViewModel.swift */,
 				107727CB2F6D7BEC0052302F /* ProjectViewModel.swift */,
 				10C737362F7146F100079621 /* CourseViewModel.swift */,
+				10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -201,6 +204,7 @@
 				10C7373B2F71665A00079621 /* AdminPanelView.swift in Sources */,
 				10C737392F714D1300079621 /* ProfileView.swift in Sources */,
 				1090E7EE2F6C6A3300CE9E81 /* AuthViewModel.swift in Sources */,
+				10C57C8F2F7198EA00A5FA47 /* ProjectDetailViewModel.swift in Sources */,
 				1090E7F32F6C6EE500CE9E81 /* DashboardView.swift in Sources */,
 				1096C2202F6EC7F7001049D0 /* AddProjectView.swift in Sources */,
 				10C7373F2F716CC500079621 /* ProjectDetailView.swift in Sources */,

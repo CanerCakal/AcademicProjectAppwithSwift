@@ -1,22 +1,22 @@
 import SwiftUI
 
 struct ProjectDetailView: View {
-    // Tıklanan projenin verilerini bu değişkene alacağız
     var project: Project
+    
+    // Yazdığımız yeni ViewModel'i ekliyoruz
+    @StateObject private var viewModel = ProjectDetailViewModel()
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 25) {
                 
-                // 1. ÜST KISIM: Başlık ve Durum Rozeti
+                // 1. ÜST KISIM: Başlık ve Durum
                 HStack(alignment: .top) {
                     Text(project.title)
                         .font(.largeTitle)
                         .fontWeight(.heavy)
                         .foregroundColor(.primary)
-                    
                     Spacer()
-                    
                     Text(project.status.uppercased())
                         .font(.caption)
                         .fontWeight(.bold)
@@ -46,14 +46,59 @@ struct ProjectDetailView: View {
                 
                 Divider()
                 
-                // 3. ALT KISIM: Meta Bilgiler (Ders ve Öğrenci ID)
-                VStack(alignment: .leading, spacing: 15) {
-                    Label("Ders ID: \(project.courseId)", systemImage: "book.closed.fill")
+                // 3. ALT KISIM: BİRLEŞTİRİLMİŞ VERİLER (JOIN)
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("Bağlantılı Bilgiler")
+                        .font(.title3)
+                        .fontWeight(.bold)
                     
-                    Label("Oluşturan (Öğrenci ID): \(project.createdBy)", systemImage: "person.fill")
+                    if viewModel.isLoading {
+                        // Veriler gelene kadar yükleniyor çarkı göster
+                        ProgressView("Bilgiler getiriliyor...")
+                    } else {
+                        // GELEN DERS BİLGİSİ
+                        HStack(spacing: 15) {
+                            Image(systemName: "book.closed.fill")
+                                .foregroundColor(.orange)
+                                .font(.title2)
+                            VStack(alignment: .leading) {
+                                Text("Ders")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                // Eğer ders bulunursa adını ve kodunu yaz, bulunamazsa hata mesajı yaz
+                                if let course = viewModel.course {
+                                    Text("\(course.courseCode) - \(course.courseName)")
+                                        .font(.headline)
+                                } else {
+                                    Text("Ders bilgisi bulunamadı")
+                                        .font(.subheadline)
+                                        .italic()
+                                }
+                            }
+                        }
+                        
+                        // GELEN ÖĞRENCİ BİLGİSİ
+                        HStack(spacing: 15) {
+                            Image(systemName: "person.fill")
+                                .foregroundColor(.green)
+                                .font(.title2)
+                            VStack(alignment: .leading) {
+                                Text("Oluşturan Öğrenci")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                // Eğer öğrenci bulunursa adını yaz
+                                if let student = viewModel.student {
+                                    Text(student.fullName)
+                                        .font(.headline)
+                                } else {
+                                    Text("Öğrenci verisi silinmiş veya bulunamadı")
+                                        .font(.subheadline)
+                                        .italic()
+                                }
+                            }
+                        }
+                    }
                 }
-                .font(.callout)
-                .foregroundColor(.gray)
                 .padding(.top, 5)
                 
                 Spacer()
@@ -61,10 +106,13 @@ struct ProjectDetailView: View {
             .padding(20)
         }
         .navigationTitle("Proje Detayı")
-        .navigationBarTitleDisplayMode(.inline) // Başlığı ortada küçük gösterir
+        .navigationBarTitleDisplayMode(.inline)
+        // Ekran açılır açılmaz ViewModel'deki fetchRelatedData fonksiyonunu çağır!
+        .task {
+            await viewModel.fetchRelatedData(courseId: project.courseId, studentId: project.createdBy)
+        }
     }
     
-    // Rozet Renklendirme Yardımcısı
     func statusColor(for status: String) -> Color {
         switch status.lowercased() {
         case "approved": return .green

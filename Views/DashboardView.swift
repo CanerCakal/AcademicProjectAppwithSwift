@@ -24,7 +24,10 @@ struct DashboardView: View {
                                     .padding(.top, 50)
                             } else {
                                 ForEach(projectViewModel.projects) { project in
-                                    ProjectCardView(project: project)
+                                    NavigationLink(destination: ProjectDetailView(project: project)) {
+                                        ProjectCardView(project: project)
+                                    }
+                                    .buttonStyle(PlainButtonStyle()) // Linkin kartı standart mavi metne çevirmesini engeller!
                                 }
                             }
                         }

@@ -42,22 +42,33 @@ struct LoginView: View {
                     .padding(.horizontal)
             }
             
-            // Giriş Butonu
+            // LoginView içindeki Giriş Butonu Kısmı:
             Button(action: {
-                // async bir fonksiyonu tetiklediğimiz için Task { } içine alıyoruz
                 Task {
                     await authViewModel.login(email: email, password: password)
                 }
             }) {
-                Text("Giriş Yap")
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(10)
+                // Eğer işlem yapılıyorsa dönen çark göster, yapılmıyorsa yazıyı göster
+                if authViewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue.opacity(0.7))
+                        .cornerRadius(10)
+                } else {
+                    Text("Giriş Yap")
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                }
             }
             .padding(.horizontal, 30)
+            // Eğer yükleniyorsa veya e-posta/şifre boşsa butona tıklanmasını engelle!
+            .disabled(authViewModel.isLoading || email.isEmpty || password.isEmpty)
             
             Spacer()
         }

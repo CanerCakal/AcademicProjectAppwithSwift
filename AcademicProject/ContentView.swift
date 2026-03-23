@@ -1,19 +1,24 @@
 import SwiftUI
 
 struct ContentView: View {
-    // ViewModel'imizi burada tek bir defa oluşturuyoruz (StateObject)
     @StateObject private var authViewModel = AuthViewModel()
     
     var body: some View {
         Group {
-            // Kullanıcı giriş yapmış mı?
-            if authViewModel.isAuthenticated {
+            if authViewModel.isCheckingAuth {
+                // Uygulama açıldığında saniyelik de olsa görünecek şık bekleme ekranı
+                VStack(spacing: 20) {
+                    ProgressView()
+                        .scaleEffect(1.5)
+                    Text("Oturum kontrol ediliyor...")
+                        .foregroundColor(.gray)
+                }
+            } else if authViewModel.isAuthenticated {
                 MainTabView()
             } else {
                 LoginView()
             }
         }
-        // Oluşturduğumuz bu viewModel'i tüm alt görünümlere (.environmentObject ile) paylaşıyoruz
         .environmentObject(authViewModel)
     }
 }

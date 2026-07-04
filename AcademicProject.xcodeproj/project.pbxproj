@@ -18,6 +18,7 @@
 		1090E7F12F6C6ECB00CE9E81 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */; };
 		1090E7F32F6C6EE500CE9E81 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */; };
 		1096C2202F6EC7F7001049D0 /* AddProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */; };
+		10A6A8992FF70BEB00A60179 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A6A8982FF70BE600A60179 /* RegisterView.swift */; };
 		10C57C8F2F7198EA00A5FA47 /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */; };
 		10C737372F7146F100079621 /* CourseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C737362F7146F100079621 /* CourseViewModel.swift */; };
 		10C737392F714D1300079621 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C737382F714D1300079621 /* ProfileView.swift */; };
@@ -37,6 +38,7 @@
 		1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProjectView.swift; sourceTree = "<group>"; };
+		10A6A8982FF70BE600A60179 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModel.swift; sourceTree = "<group>"; };
 		10C737362F7146F100079621 /* CourseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseViewModel.swift; sourceTree = "<group>"; };
 		10C737382F714D1300079621 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 		1090E7EF2F6C6EB100CE9E81 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				10A6A8982FF70BE600A60179 /* RegisterView.swift */,
 				1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */,
 				1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */,
 				1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */,
@@ -207,6 +210,7 @@
 				10C57C8F2F7198EA00A5FA47 /* ProjectDetailViewModel.swift in Sources */,
 				1090E7F32F6C6EE500CE9E81 /* DashboardView.swift in Sources */,
 				1096C2202F6EC7F7001049D0 /* AddProjectView.swift in Sources */,
+				10A6A8992FF70BEB00A60179 /* RegisterView.swift in Sources */,
 				10C7373F2F716CC500079621 /* ProjectDetailView.swift in Sources */,
 				1090E7E52F6C676500CE9E81 /* User.swift in Sources */,
 				107727CC2F6D7BEC0052302F /* ProjectViewModel.swift in Sources */,

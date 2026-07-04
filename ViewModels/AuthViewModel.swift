@@ -79,4 +79,40 @@ class AuthViewModel: ObservableObject {
             print("Çıkış hatası: \(error.localizedDescription)")
         }
     }
+    
+    func register(fullName: String, email: String, password: String, departmentId: String?) async {
+        self.isLoading = true          // Butona basıldı, yükleniyor çarkını yak
+        self.errorMessage = nil        // Önceki hata mesajı varsa temizle
+
+        do {
+            // ADIM 1: Firebase Auth'a yeni kimlik oluşturmasını söyle.
+            // Başarılı olursa bize bir authResult döner, içinde user.uid var.
+            let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
+            let uid = authResult.user.uid
+
+            // ADIM 2: Bu uid'ye sahip yeni bir User profili hazırla.
+            // roleId'yi şimdilik 3 (Öğrenci) olarak sabitliyoruz — herkes öğrenci olarak kaydolur.
+            let newUser = User(
+                id: uid,                // Firestore belgesinin id'si = Auth'un uid'si (iki dünyayı bağlayan anahtar!)
+                fullName: fullName,
+                email: email,
+                roleId: 3,
+                departmentId: departmentId
+            )
+
+            // ADIM 3: Bu profili Firestore'da "users" koleksiyonuna, uid adlı belgeye yaz.
+            // setData(from:) modelimizi otomatik olarak JSON'a çevirip kaydeder.
+            try db.collection("users").document(uid).setData(from: newUser)
+
+            // ADIM 4: Kayıt başarılı. Kullanıcıyı hemen giriş yapmış say ve içeri al.
+            self.currentUser = newUser
+            self.isAuthenticated = true
+
+        } catch {
+            // Auth ya da Firestore'da bir şey ters giderse (e-posta zaten var, şifre zayıf vs.)
+            self.errorMessage = "Kayıt başarısız: \(error.localizedDescription)"
+        }
+
+        self.isLoading = false         // İşlem bitti, çarkı söndür
+    }
 }

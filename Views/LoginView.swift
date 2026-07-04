@@ -7,6 +7,7 @@ struct LoginView: View {
     // Ekranda kullanıcının yazdıklarını tutacak anlık değişkenler (State)
     @State private var email = ""
     @State private var password = ""
+    @State private var showRegister = false
     
     var body: some View {
         VStack(spacing: 25) {
@@ -42,13 +43,12 @@ struct LoginView: View {
                     .padding(.horizontal)
             }
             
-            // LoginView içindeki Giriş Butonu Kısmı:
+            // Giriş Butonu
             Button(action: {
                 Task {
                     await authViewModel.login(email: email, password: password)
                 }
             }) {
-                // Eğer işlem yapılıyorsa dönen çark göster, yapılmıyorsa yazıyı göster
                 if authViewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
@@ -67,11 +67,21 @@ struct LoginView: View {
                 }
             }
             .padding(.horizontal, 30)
-            // Eğer yükleniyorsa veya e-posta/şifre boşsa butona tıklanmasını engelle!
-            .disabled(authViewModel.isLoading || email.isEmpty || password.isEmpty)
+            .disabled(authViewModel.isLoading || email.isEmpty || password.isEmpty)  // ← BURAYA taşındı
+
+            // Kayıt Ol Butonu (artık disabled yok, hep aktif)
+            Button("Hesabın yok mu? Kayıt Ol") {
+                showRegister = true
+            }
+            .font(.footnote)
+            .padding(.top, 8)
             
             Spacer()
         }
         .padding(.top, 80)
+        .sheet(isPresented: $showRegister) {
+            RegisterView()
+                .environmentObject(authViewModel)
+        }
     }
 }

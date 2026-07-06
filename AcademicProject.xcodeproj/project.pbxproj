@@ -18,6 +18,7 @@
 		1090E7F12F6C6ECB00CE9E81 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */; };
 		1090E7F32F6C6EE500CE9E81 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */; };
 		1096C2202F6EC7F7001049D0 /* AddProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */; };
+		109ED7122FFC438D00340B0D /* TeacherDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109ED7112FFC438D00340B0D /* TeacherDashboardView.swift */; };
 		10A6A8992FF70BEB00A60179 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A6A8982FF70BE600A60179 /* RegisterView.swift */; };
 		10C57C8F2F7198EA00A5FA47 /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */; };
 		10C737372F7146F100079621 /* CourseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C737362F7146F100079621 /* CourseViewModel.swift */; };
@@ -38,6 +39,7 @@
 		1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProjectView.swift; sourceTree = "<group>"; };
+		109ED7112FFC438D00340B0D /* TeacherDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherDashboardView.swift; sourceTree = "<group>"; };
 		10A6A8982FF70BE600A60179 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModel.swift; sourceTree = "<group>"; };
 		10C737362F7146F100079621 /* CourseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseViewModel.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				10C7373A2F71665A00079621 /* AdminPanelView.swift */,
 				10C7373C2F71672500079621 /* MainTabView.swift */,
 				10C7373E2F716CC500079621 /* ProjectDetailView.swift */,
+				109ED7112FFC438D00340B0D /* TeacherDashboardView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -217,6 +220,7 @@
 				1090E7E72F6C686000CE9E81 /* Department.swift in Sources */,
 				10C737372F7146F100079621 /* CourseViewModel.swift in Sources */,
 				1090E7F12F6C6ECB00CE9E81 /* LoginView.swift in Sources */,
+				109ED7122FFC438D00340B0D /* TeacherDashboardView.swift in Sources */,
 				1090E7EB2F6C690C00CE9E81 /* Project.swift in Sources */,
 				10C7373D2F71672500079621 /* MainTabView.swift in Sources */,
 			);

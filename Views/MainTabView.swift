@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    
+
     var body: some View {
         // Kullanıcı verisi yüklenene kadar beklet
         if let user = authViewModel.currentUser {
@@ -10,9 +10,12 @@ struct MainTabView: View {
                 // SEKME 1: Herkesin göreceği ana projeler ekranı
                 DashboardView()
                     .tabItem {
-                        Label("Projeler", systemImage: "list.dash.header.rectangle")
+                        Label(
+                            "Projeler",
+                            systemImage: "list.dash.header.rectangle"
+                        )
                     }
-                
+
                 // SEKME 2: SADECE ADMİN (roleId == 1) İSE GÖSTER!
                 if user.roleId == 1 {
                     AdminPanelView()
@@ -20,7 +23,14 @@ struct MainTabView: View {
                             Label("Yönetim", systemImage: "gearshape.fill")
                         }
                 }
-                
+
+                if user.roleId == 2 {
+                    TeacherDashboardView()
+                        .tabItem {
+                            Label("Onaylar", systemImage: "checkmark.seal.fill")
+                        }
+                }
+
                 // SEKME 3: Profil Ekranı
                 ProfileView()
                     .tabItem {

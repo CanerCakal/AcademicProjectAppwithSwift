@@ -10,7 +10,7 @@ An iOS application for organizing and tracking academic course projects, built w
 
 | Login | Student Dashboard | Teacher Approvals | Admin Panel |
 |:---:|:---:|:---:|:---:|
-| _add screenshot_ | _add screenshot_ | _add screenshot_ | _add screenshot_ |
+|  |  |  |  |
 
 <!-- Replace the placeholders above with real screenshots, e.g.:
 | ![Login](docs/login.png) | ![Dashboard](docs/dashboard.png) | ... |

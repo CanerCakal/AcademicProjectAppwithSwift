@@ -16,4 +16,20 @@ class CourseViewModel: ObservableObject {
             print("Dersler yüklenirken hata oluştu: \(error.localizedDescription)")
         }
     }
+    
+    func addCourse(courseCode: String, courseName: String, term: String) async {
+        let newCourse = Course(
+            courseCode: courseCode,
+            courseName: courseName,
+            term: term,
+            departmentId: nil,
+            ınstructorId: nil
+        )
+        do {
+            try db.collection("courses").addDocument(from: newCourse)
+            await fetchCourses()
+        } catch {
+            print("Ders eklenirken hata oluştu: \(error.localizedDescription)")
+        }
+    }
 }

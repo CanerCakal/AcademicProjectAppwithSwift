@@ -7,6 +7,7 @@ struct DashboardView: View {
     
     // Yeni Proje Ekleme (Sheet) ekranının açılıp kapanmasını kontrol eden değişken
     @State private var showingAddProject = false
+    @State private var projectToEdit: Project?
     
     var body: some View {
         NavigationView {
@@ -27,7 +28,24 @@ struct DashboardView: View {
                                     NavigationLink(destination: ProjectDetailView(project: project)) {
                                         ProjectCardView(project: project)
                                     }
-                                    .buttonStyle(PlainButtonStyle()) // Linkin kartı standart mavi metne çevirmesini engeller!
+                                    .buttonStyle(PlainButtonStyle())
+                                    .contextMenu {
+                                        if project.createdBy == authViewModel.currentUser?.id {
+                                            Button {
+                                                projectToEdit = project
+                                            } label: {
+                                                Label("Düzenle", systemImage: "pencil")
+                                            }
+                                            
+                                            Button(role: .destructive) {
+                                                Task {
+                                                    await projectViewModel.deleteProject(projectId: project.id ?? "")
+                                                }
+                                            } label: {
+                                                Label("Sil", systemImage: "trash")
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -57,6 +75,10 @@ struct DashboardView: View {
                     // Butona basıldığında aşağıdan açılacak form ekranı
                     .sheet(isPresented: $showingAddProject) {
                         AddProjectView(projectViewModel: projectViewModel)
+                    }
+                    .sheet(item: $projectToEdit) { project in
+                        EditProjectView(project: project)
+                            .environmentObject(projectViewModel)
                     }
                 }
             }

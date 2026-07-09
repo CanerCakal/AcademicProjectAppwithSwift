@@ -26,6 +26,7 @@
 		10C7373B2F71665A00079621 /* AdminPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C7373A2F71665A00079621 /* AdminPanelView.swift */; };
 		10C7373D2F71672500079621 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C7373C2F71672500079621 /* MainTabView.swift */; };
 		10C7373F2F716CC500079621 /* ProjectDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C7373E2F716CC500079621 /* ProjectDetailView.swift */; };
+		10CA2D0E30003CBC00783A14 /*  EditProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CA2D0D30003CBC00783A14 /*  EditProjectView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		10C7373A2F71665A00079621 /* AdminPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminPanelView.swift; sourceTree = "<group>"; };
 		10C7373C2F71672500079621 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		10C7373E2F716CC500079621 /* ProjectDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailView.swift; sourceTree = "<group>"; };
+		10CA2D0D30003CBC00783A14 /*  EditProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " EditProjectView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -123,6 +125,7 @@
 				10C7373C2F71672500079621 /* MainTabView.swift */,
 				10C7373E2F716CC500079621 /* ProjectDetailView.swift */,
 				109ED7112FFC438D00340B0D /* TeacherDashboardView.swift */,
+				10CA2D0D30003CBC00783A14 /*  EditProjectView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -217,6 +220,7 @@
 				10C7373F2F716CC500079621 /* ProjectDetailView.swift in Sources */,
 				1090E7E52F6C676500CE9E81 /* User.swift in Sources */,
 				107727CC2F6D7BEC0052302F /* ProjectViewModel.swift in Sources */,
+				10CA2D0E30003CBC00783A14 /*  EditProjectView.swift in Sources */,
 				1090E7E72F6C686000CE9E81 /* Department.swift in Sources */,
 				10C737372F7146F100079621 /* CourseViewModel.swift in Sources */,
 				1090E7F12F6C6ECB00CE9E81 /* LoginView.swift in Sources */,

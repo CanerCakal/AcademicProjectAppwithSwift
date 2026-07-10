@@ -18,6 +18,7 @@
 		1090E7F12F6C6ECB00CE9E81 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */; };
 		1090E7F32F6C6EE500CE9E81 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */; };
 		1096C2202F6EC7F7001049D0 /* AddProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */; };
+		109D161330018B9E0084E6EC /*  UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109D161230018B9E0084E6EC /*  UserViewModel.swift */; };
 		109ED7122FFC438D00340B0D /* TeacherDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109ED7112FFC438D00340B0D /* TeacherDashboardView.swift */; };
 		10A6A8992FF70BEB00A60179 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A6A8982FF70BE600A60179 /* RegisterView.swift */; };
 		10C57C8F2F7198EA00A5FA47 /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */; };
@@ -40,6 +41,7 @@
 		1090E7F02F6C6ECB00CE9E81 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1090E7F22F6C6EE500CE9E81 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		1096C21F2F6EC7F7001049D0 /* AddProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProjectView.swift; sourceTree = "<group>"; };
+		109D161230018B9E0084E6EC /*  UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " UserViewModel.swift"; sourceTree = "<group>"; };
 		109ED7112FFC438D00340B0D /* TeacherDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherDashboardView.swift; sourceTree = "<group>"; };
 		10A6A8982FF70BE600A60179 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModel.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				107727CB2F6D7BEC0052302F /* ProjectViewModel.swift */,
 				10C737362F7146F100079621 /* CourseViewModel.swift */,
 				10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */,
+				109D161230018B9E0084E6EC /*  UserViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -222,6 +225,7 @@
 				107727CC2F6D7BEC0052302F /* ProjectViewModel.swift in Sources */,
 				10CA2D0E30003CBC00783A14 /*  EditProjectView.swift in Sources */,
 				1090E7E72F6C686000CE9E81 /* Department.swift in Sources */,
+				109D161330018B9E0084E6EC /*  UserViewModel.swift in Sources */,
 				10C737372F7146F100079621 /* CourseViewModel.swift in Sources */,
 				1090E7F12F6C6ECB00CE9E81 /* LoginView.swift in Sources */,
 				109ED7122FFC438D00340B0D /* TeacherDashboardView.swift in Sources */,

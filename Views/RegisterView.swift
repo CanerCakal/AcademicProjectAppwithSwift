@@ -1,14 +1,9 @@
 import SwiftUI
 
 struct RegisterView: View {
-    // AuthViewModel'i login ekranıyla paylaşıyoruz ki kayıt sonrası
-    // isAuthenticated true olunca uygulama otomatik Dashboard'a geçsin.
     @EnvironmentObject var authViewModel: AuthViewModel
-
-    // Bu ekran bir sheet olarak açılacak; kapatmak için dismiss kullanacağız.
     @Environment(\.dismiss) var dismiss
 
-    // Formdaki üç alanın canlı değerlerini tutan state değişkenleri.
     @State private var fullName = ""
     @State private var email = ""
     @State private var password = ""
@@ -16,116 +11,130 @@ struct RegisterView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 24) {
+                VStack(spacing: 0) {
 
-                    // --- Başlık bölümü ---
-                    VStack(spacing: 8) {
+                    VStack(spacing: 12) {
                         Image(systemName: "person.badge.plus")
-                            .font(.system(size: 48))
-                            .foregroundStyle(.blue)
+                            .font(.system(size: 52))
+                            .foregroundStyle(Color.appPrimary)
 
                         Text("Hesap Oluştur")
-                            .font(.title).bold()
+                            .font(.title)
+                            .fontWeight(.bold)
 
                         Text("Akademik projelerini yönetmeye başla")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
                     .padding(.top, 32)
+                    .padding(.bottom, 32)
 
-                    // --- Form alanları ---
-                    VStack(spacing: 16) {
-                        // Her alanı küçük bir yardımcı görünümle çiziyoruz (aşağıda tanımlı).
-                        labeledField(icon: "person", placeholder: "Ad Soyad", text: $fullName)
+                    VStack(spacing: 14) {
+                        inputField(icon: "person", placeholder: "Ad Soyad", text: $fullName)
 
-                        labeledField(icon: "envelope", placeholder: "E-posta", text: $email)
+                        inputField(icon: "envelope", placeholder: "E-posta", text: $email)
                             .keyboardType(.emailAddress)
                             .textInputAutocapitalization(.never)
+                            .autocorrectionDisabled()
 
-                        labeledSecureField(icon: "lock", placeholder: "Şifre", text: $password)
+                        secureInputField(icon: "lock", placeholder: "Şifre", text: $password)
                     }
-                    .padding(.horizontal)
+                    .padding(.horizontal, 28)
 
-                    // --- Hata mesajı (varsa) ---
                     if let errorMessage = authViewModel.errorMessage {
-                        Text(errorMessage)
-                            .font(.footnote)
-                            .foregroundStyle(.red)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
+                        HStack(spacing: 8) {
+                            Image(systemName: "exclamationmark.circle.fill")
+                            Text(errorMessage)
+                        }
+                        .font(.footnote)
+                        .foregroundStyle(.red)
+                        .padding(.horizontal, 28)
+                        .padding(.top, 16)
+                        .transition(.opacity)
                     }
 
-                    // --- Kayıt ol butonu ---
                     Button {
-                        // Butona basınca register'ı çağırıyoruz. async olduğu için Task içinde.
                         Task {
                             await authViewModel.register(
                                 fullName: fullName,
                                 email: email,
                                 password: password,
-                                departmentId: nil   // Bölüm seçimini şimdilik boş geçiyoruz
+                                departmentId: nil
                             )
-                            // Kayıt başarılıysa isAuthenticated true olur; ekranı kapat.
                             if authViewModel.isAuthenticated {
                                 dismiss()
                             }
                         }
                     } label: {
-                        // isLoading true ise çark, değilse "Kayıt Ol" yazısı göster.
-                        if authViewModel.isLoading {
-                            ProgressView()
-                                .frame(maxWidth: .infinity)
-                        } else {
-                            Text("Kayıt Ol")
-                                .bold()
-                                .frame(maxWidth: .infinity)
+                        Group {
+                            if authViewModel.isLoading {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            } else {
+                                Text("Kayıt Ol")
+                                    .fontWeight(.semibold)
+                            }
                         }
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 52)
+                        .background(Color.appPrimary)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .shadow(color: Color.appPrimary.opacity(0.3), radius: 8, x: 0, y: 4)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    .padding(.horizontal)
-                    // Alanlar boşken butonu pasif yap (basit doğrulama).
+                    .buttonStyle(BouncyButtonStyle())
+                    .padding(.horizontal, 28)
+                    .padding(.top, 28)
                     .disabled(fullName.isEmpty || email.isEmpty || password.isEmpty || authViewModel.isLoading)
+                    .opacity((fullName.isEmpty || email.isEmpty || password.isEmpty) ? 0.6 : 1.0)
 
-                    Spacer()
+                    Spacer(minLength: 40)
                 }
             }
+            .scrollDismissesKeyboard(.interactively)
+            .animation(.easeOut(duration: 0.2), value: authViewModel.errorMessage)
             .navigationTitle("Kayıt")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                // Sağ üstte kapatma butonu.
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("İptal") { dismiss() }
+                        .foregroundStyle(Color.appPrimary)
                 }
             }
         }
     }
 
-    // --- Yardımcı görünümler ---
-    // Aynı stildeki alanları tekrar tekrar yazmamak için küçük fonksiyonlara böldük.
-    // Bu, "kendini tekrar etme" (DRY) prensibinin SwiftUI'daki pratik hali.
-
-    private func labeledField(icon: String, placeholder: String, text: Binding<String>) -> some View {
-        HStack {
+    private func inputField(icon: String, placeholder: String, text: Binding<String>) -> some View {
+        HStack(spacing: 12) {
             Image(systemName: icon)
                 .foregroundStyle(.secondary)
-                .frame(width: 24)
+                .frame(width: 20)
             TextField(placeholder, text: text)
         }
-        .padding()
-        .background(Color(.systemGray6))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.horizontal, 16)
+        .frame(height: 52)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color.gray.opacity(0.15), lineWidth: 1)
+        )
     }
 
-    private func labeledSecureField(icon: String, placeholder: String, text: Binding<String>) -> some View {
-        HStack {
+    private func secureInputField(icon: String, placeholder: String, text: Binding<String>) -> some View {
+        HStack(spacing: 12) {
             Image(systemName: icon)
                 .foregroundStyle(.secondary)
-                .frame(width: 24)
+                .frame(width: 20)
             SecureField(placeholder, text: text)
         }
-        .padding()
-        .background(Color(.systemGray6))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.horizontal, 16)
+        .frame(height: 52)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color.gray.opacity(0.15), lineWidth: 1)
+        )
     }
 }

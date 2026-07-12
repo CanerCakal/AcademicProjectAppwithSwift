@@ -18,7 +18,8 @@ struct AdminPanelView: View {
                     Text("Kullanıcılar").tag(1)
                 }
                 .pickerStyle(.segmented)
-                .padding()
+                .padding(.horizontal)
+                .padding(.vertical, 12)
 
                 if selectedSection == 0 {
                     coursesSection
@@ -26,7 +27,9 @@ struct AdminPanelView: View {
                     usersSection
                 }
             }
+            .background(Color(UIColor.systemGroupedBackground))
             .navigationTitle("Yönetim")
+            .tint(.appPrimary)
             .task {
                 await courseViewModel.fetchCourses()
                 await userViewModel.fetchUsers()
@@ -54,8 +57,14 @@ struct AdminPanelView: View {
                         term = ""
                     }
                 } label: {
-                    Text("Dersi Ekle")
+                    HStack {
+                        Spacer()
+                        Label("Dersi Ekle", systemImage: "plus.circle.fill")
+                            .fontWeight(.semibold)
+                        Spacer()
+                    }
                 }
+                .foregroundStyle(Color.appPrimary)
                 .disabled(courseCode.isEmpty || courseName.isEmpty || term.isEmpty)
             }
 
@@ -65,46 +74,82 @@ struct AdminPanelView: View {
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(courseViewModel.courses) { course in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(course.courseName)
-                                .font(.headline)
-                            Text("\(course.courseCode) · \(course.term)")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                        HStack(spacing: 12) {
+                            Image(systemName: "book.closed.fill")
+                                .foregroundStyle(Color.appPrimary)
+                                .frame(width: 28)
+
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(course.courseName)
+                                    .font(.subheadline.weight(.semibold))
+                                Text("\(course.courseCode) · \(course.term)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
+                        .padding(.vertical, 4)
                     }
                 }
             }
         }
+        .scrollContentBackground(.hidden)
     }
 
     private var usersSection: some View {
-        List(userViewModel.users) { user in
-            VStack(alignment: .leading, spacing: 8) {
-                Text(user.fullName)
-                    .font(.headline)
-                Text(user.email)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                ForEach(userViewModel.users) { user in
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(spacing: 12) {
+                            Circle()
+                                .fill(Color.appPrimary.opacity(0.15))
+                                .frame(width: 42, height: 42)
+                                .overlay(
+                                    Text(initials(for: user.fullName))
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(Color.appPrimary)
+                                )
 
-                Picker("Rol", selection: Binding(
-                    get: { user.roleId },
-                    set: { newRole in
-                        Task {
-                            await userViewModel.updateUserRole(
-                                userId: user.id ?? "",
-                                newRoleId: newRole
-                            )
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(user.fullName)
+                                    .font(.subheadline.weight(.semibold))
+                                Text(user.email)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
                         }
+
+                        Picker("Rol", selection: Binding(
+                            get: { user.roleId },
+                            set: { newRole in
+                                Task {
+                                    await userViewModel.updateUserRole(
+                                        userId: user.id ?? "",
+                                        newRoleId: newRole
+                                    )
+                                }
+                            }
+                        )) {
+                            Text("Öğrenci").tag(3)
+                            Text("Öğretmen").tag(2)
+                            Text("Admin").tag(1)
+                        }
+                        .pickerStyle(.segmented)
                     }
-                )) {
-                    Text("Öğrenci").tag(3)
-                    Text("Öğretmen").tag(2)
-                    Text("Admin").tag(1)
+                    .padding(14)
+                    .background(Color(UIColor.secondarySystemGroupedBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
-                .pickerStyle(.segmented)
             }
-            .padding(.vertical, 4)
+            .padding()
         }
+    }
+
+    private func initials(for name: String) -> String {
+        let parts = name.split(separator: " ")
+        let letters = parts.prefix(2).compactMap { $0.first }
+        return String(letters).uppercased()
     }
 }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		102CF16F2F6AB1D400B3854E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 102CF16E2F6AB1D400B3854E /* FirebaseAuth */; };
 		102CF1712F6AB1D400B3854E /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 102CF1702F6AB1D400B3854E /* FirebaseFirestore */; };
+		10652046300584FC005F502E /* RoleResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10652045300584FC005F502E /* RoleResolver.swift */; };
 		107727CC2F6D7BEC0052302F /* ProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107727CB2F6D7BEC0052302F /* ProjectViewModel.swift */; };
 		1090E7E52F6C676500CE9E81 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7E42F6C676500CE9E81 /* User.swift */; };
 		1090E7E72F6C686000CE9E81 /* Department.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1090E7E62F6C686000CE9E81 /* Department.swift */; };
@@ -32,6 +33,7 @@
 
 /* Begin PBXFileReference section */
 		102CF15D2F6AAD6000B3854E /* AcademicProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AcademicProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		10652045300584FC005F502E /* RoleResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoleResolver.swift; sourceTree = "<group>"; };
 		107727CB2F6D7BEC0052302F /* ProjectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectViewModel.swift; sourceTree = "<group>"; };
 		1090E7E42F6C676500CE9E81 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		1090E7E62F6C686000CE9E81 /* Department.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Department.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 				1090E7E62F6C686000CE9E81 /* Department.swift */,
 				1090E7E82F6C689E00CE9E81 /* Course.swift */,
 				1090E7EA2F6C690C00CE9E81 /* Project.swift */,
+				10652045300584FC005F502E /* RoleResolver.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				107727CC2F6D7BEC0052302F /* ProjectViewModel.swift in Sources */,
 				10CA2D0E30003CBC00783A14 /*  EditProjectView.swift in Sources */,
 				1090E7E72F6C686000CE9E81 /* Department.swift in Sources */,
+				10652046300584FC005F502E /* RoleResolver.swift in Sources */,
 				109D161330018B9E0084E6EC /*  UserViewModel.swift in Sources */,
 				10C737372F7146F100079621 /* CourseViewModel.swift in Sources */,
 				1090E7F12F6C6ECB00CE9E81 /* LoginView.swift in Sources */,

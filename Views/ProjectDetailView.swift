@@ -1,125 +1,222 @@
 import SwiftUI
 
 struct ProjectDetailView: View {
-    var project: Project
-    
-    // Yazdığımız yeni ViewModel'i ekliyoruz
+    let project: Project
+
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var viewModel = ProjectDetailViewModel()
-    
+    @StateObject private var projectViewModel = ProjectViewModel()
+
+    @State private var currentStatus: String
+    @State private var showEditSheet = false
+
+    init(project: Project) {
+        self.project = project
+        _currentStatus = State(initialValue: project.status)
+    }
+
+    private var isOwner: Bool {
+        project.createdBy == authViewModel.currentUser?.id
+    }
+
+    private var isTeacher: Bool {
+        authViewModel.currentUser?.roleId == 2
+    }
+
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 25) {
-                
-                // 1. ÜST KISIM: Başlık ve Durum
-                HStack(alignment: .top) {
-                    Text(project.title)
-                        .font(.largeTitle)
-                        .fontWeight(.heavy)
-                        .foregroundColor(.primary)
-                    Spacer()
-                    Text(project.status.uppercased())
+            VStack(alignment: .leading, spacing: 20) {
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(statusLabel(for: currentStatus))
                         .font(.caption)
-                        .fontWeight(.bold)
+                        .fontWeight(.semibold)
                         .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(statusColor(for: project.status))
-                        .foregroundColor(.white)
-                        .cornerRadius(20)
-                        .padding(.top, 5)
-                }
-                
-                Divider()
-                
-                // 2. ORTA KISIM: Özet
-                VStack(alignment: .leading, spacing: 10) {
-                    Label("Proje Özeti", systemImage: "doc.text.fill")
-                        .font(.title3)
+                        .padding(.vertical, 5)
+                        .background(statusColor(for: currentStatus).opacity(0.15))
+                        .foregroundStyle(statusColor(for: currentStatus))
+                        .clipShape(Capsule())
+
+                    Text(project.title)
+                        .font(.title)
                         .fontWeight(.bold)
-                        .foregroundColor(.blue)
-                    
-                    Text(project.summary ?? "Bu proje için henüz bir özet girilmemiş.")
-                        .font(.body)
-                        .lineSpacing(6)
-                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(.vertical, 5)
-                
-                Divider()
-                
-                // 3. ALT KISIM: BİRLEŞTİRİLMİŞ VERİLER (JOIN)
-                VStack(alignment: .leading, spacing: 20) {
-                    Text("Bağlantılı Bilgiler")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                    
-                    if viewModel.isLoading {
-                        // Veriler gelene kadar yükleniyor çarkı göster
-                        ProgressView("Bilgiler getiriliyor...")
-                    } else {
-                        // GELEN DERS BİLGİSİ
-                        HStack(spacing: 15) {
-                            Image(systemName: "book.closed.fill")
-                                .foregroundColor(.orange)
-                                .font(.title2)
-                            VStack(alignment: .leading) {
-                                Text("Ders")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                // Eğer ders bulunursa adını ve kodunu yaz, bulunamazsa hata mesajı yaz
-                                if let course = viewModel.course {
-                                    Text("\(course.courseCode) - \(course.courseName)")
-                                        .font(.headline)
-                                } else {
-                                    Text("Ders bilgisi bulunamadı")
-                                        .font(.subheadline)
-                                        .italic()
-                                }
+
+                infoCard {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Label("Proje Özeti", systemImage: "doc.text")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Color.appPrimary)
+
+                        Text(project.summary ?? "Bu proje için henüz bir özet girilmemiş.")
+                            .font(.body)
+                            .lineSpacing(5)
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                infoCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Bağlantılı Bilgiler")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Color.appPrimary)
+
+                        if viewModel.isLoading {
+                            HStack(spacing: 8) {
+                                ProgressView()
+                                Text("Bilgiler getiriliyor...")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
                             }
-                        }
-                        
-                        // GELEN ÖĞRENCİ BİLGİSİ
-                        HStack(spacing: 15) {
-                            Image(systemName: "person.fill")
-                                .foregroundColor(.green)
-                                .font(.title2)
-                            VStack(alignment: .leading) {
-                                Text("Oluşturan Öğrenci")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                // Eğer öğrenci bulunursa adını yaz
-                                if let student = viewModel.student {
-                                    Text(student.fullName)
-                                        .font(.headline)
-                                } else {
-                                    Text("Öğrenci verisi silinmiş veya bulunamadı")
-                                        .font(.subheadline)
-                                        .italic()
-                                }
-                            }
+                        } else {
+                            detailRow(
+                                icon: "book.closed.fill",
+                                label: "Ders",
+                                value: viewModel.course.map { "\($0.courseCode) · \($0.courseName)" }
+                                    ?? "Ders bilgisi bulunamadı"
+                            )
+
+                            Divider()
+
+                            detailRow(
+                                icon: "person.fill",
+                                label: "Oluşturan",
+                                value: viewModel.student?.fullName ?? "Kullanıcı bulunamadı"
+                            )
                         }
                     }
                 }
-                .padding(.top, 5)
-                
-                Spacer()
+
+                if isTeacher && currentStatus == "proposal" {
+                    teacherActions
+                }
+
+                if isOwner {
+                    Button {
+                        showEditSheet = true
+                    } label: {
+                        Label("Projeyi Düzenle", systemImage: "pencil")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Color.appPrimary)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 48)
+                            .background(Color.appPrimary.opacity(0.12))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .buttonStyle(BouncyButtonStyle())
+                }
+
+                Spacer(minLength: 20)
             }
             .padding(20)
         }
+        .background(Color(UIColor.systemGroupedBackground))
         .navigationTitle("Proje Detayı")
         .navigationBarTitleDisplayMode(.inline)
-        // Ekran açılır açılmaz ViewModel'deki fetchRelatedData fonksiyonunu çağır!
+        .animation(.easeOut(duration: 0.25), value: currentStatus)
         .task {
-            await viewModel.fetchRelatedData(courseId: project.courseId, studentId: project.createdBy)
+            await viewModel.fetchRelatedData(
+                courseId: project.courseId,
+                studentId: project.createdBy
+            )
+        }
+        .sheet(isPresented: $showEditSheet) {
+            EditProjectView(project: project)
+                .environmentObject(projectViewModel)
         }
     }
-    
+
+    private var teacherActions: some View {
+        HStack(spacing: 12) {
+            Button {
+                Task {
+                    await projectViewModel.updateProjectStatus(
+                        projectId: project.id ?? "",
+                        newStatus: "approved"
+                    )
+                    currentStatus = "approved"
+                }
+            } label: {
+                Label("Onayla", systemImage: "checkmark")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .background(Color.statusApproved)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(BouncyButtonStyle())
+
+            Button {
+                Task {
+                    await projectViewModel.updateProjectStatus(
+                        projectId: project.id ?? "",
+                        newStatus: "rejected"
+                    )
+                    currentStatus = "rejected"
+                }
+            } label: {
+                Label("Reddet", systemImage: "xmark")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.statusRejected)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .background(Color.statusRejected.opacity(0.12))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(BouncyButtonStyle())
+        }
+    }
+
+    private func infoCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        content()
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 2)
+    }
+
+    private func detailRow(icon: String, label: String, value: String) -> some View {
+        HStack(spacing: 14) {
+            Image(systemName: icon)
+                .font(.subheadline)
+                .foregroundStyle(Color.appPrimary)
+                .frame(width: 32, height: 32)
+                .background(Color.appPrimary.opacity(0.12))
+                .clipShape(Circle())
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(label)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(value)
+                    .font(.subheadline.weight(.medium))
+            }
+
+            Spacer()
+        }
+    }
+
     func statusColor(for status: String) -> Color {
         switch status.lowercased() {
-        case "approved": return .green
-        case "development": return .orange
-        case "proposal": return .blue
-        case "rejected": return .red
+        case "approved": return .statusApproved
+        case "development": return .statusDevelopment
+        case "proposal": return .statusProposal
+        case "rejected": return .statusRejected
         default: return .gray
+        }
+    }
+
+    func statusLabel(for status: String) -> String {
+        switch status.lowercased() {
+        case "approved": return "Onaylandı"
+        case "development": return "Geliştirme"
+        case "proposal": return "Öneri"
+        case "rejected": return "Reddedildi"
+        default: return status.capitalized
         }
     }
 }

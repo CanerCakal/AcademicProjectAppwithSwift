@@ -4,83 +4,90 @@ struct AddProjectView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel: AuthViewModel
     @ObservedObject var projectViewModel: ProjectViewModel
-    
-    // Yeni eklediğimiz CourseViewModel
+
     @StateObject private var courseViewModel = CourseViewModel()
-    
+
     @State private var title = ""
     @State private var summary = ""
-    @State private var selectedCourseId = "" // Artık sabit değil, kullanıcının seçtiği ID olacak
-    
+    @State private var selectedCourseId = ""
+
+    private var isFormValid: Bool {
+        !title.isEmpty && !summary.isEmpty && !selectedCourseId.isEmpty
+    }
+
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
-                Section(header: Text("Ders Seçimi")) {
+                Section("Ders Seçimi") {
                     if courseViewModel.courses.isEmpty {
-                        Text("Dersler yükleniyor veya bulunamadı...")
-                            .foregroundColor(.gray)
+                        HStack(spacing: 8) {
+                            ProgressView()
+                            Text("Dersler yükleniyor...")
+                                .foregroundStyle(.secondary)
+                        }
                     } else {
                         Picker("Bağlı Olduğu Ders", selection: $selectedCourseId) {
-                            Text("Ders Seçiniz").tag("") // Varsayılan boş seçenek
-                            
+                            Text("Ders Seçiniz").tag("")
                             ForEach(courseViewModel.courses) { course in
-                                Text("\(course.courseCode) - \(course.courseName)")
+                                Text("\(course.courseCode) · \(course.courseName)")
                                     .tag(course.id ?? "")
                             }
                         }
                     }
                 }
-                
-                Section(header: Text("Proje Bilgileri")) {
+
+                Section("Proje Bilgileri") {
                     TextField("Proje Başlığı", text: $title)
-                    
+
                     ZStack(alignment: .topLeading) {
                         if summary.isEmpty {
                             Text("Proje özeti ve detayları...")
-                                .foregroundColor(Color(UIColor.placeholderText))
+                                .foregroundStyle(Color(UIColor.placeholderText))
                                 .padding(.top, 8)
                                 .padding(.leading, 4)
                         }
                         TextEditor(text: $summary)
-                            .frame(minHeight: 100)
+                            .frame(minHeight: 110)
                     }
                 }
-                
+
                 Section {
                     Button(action: saveProject) {
-                        Text("🚀 Projeyi Oluştur")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
+                        HStack {
+                            Spacer()
+                            Text("Projeyi Oluştur")
+                                .font(.headline)
+                                .foregroundStyle(.white)
+                            Spacer()
+                        }
+                        .padding(.vertical, 8)
                     }
-                    .listRowBackground(Color.blue)
-                    // Başlık, özet VEYA ders seçilmemişse butonu kilitle!
-                    .disabled(title.isEmpty || summary.isEmpty || selectedCourseId.isEmpty)
+                    .listRowBackground(isFormValid ? Color.appPrimary : Color.appPrimary.opacity(0.4))
+                    .disabled(!isFormValid)
                 }
             }
             .navigationTitle("Yeni Proje")
             .navigationBarTitleDisplayMode(.inline)
+            .tint(.appPrimary)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button("İptal") { dismiss() }
                 }
             }
-            // Sayfa açılır açılmaz dersleri veritabanından çek
             .task {
                 await courseViewModel.fetchCourses()
             }
         }
     }
-    
+
     private func saveProject() {
         guard let user = authViewModel.currentUser, let userId = user.id else { return }
-        
+
         Task {
             await projectViewModel.addProject(
                 title: title,
                 summary: summary,
-                courseId: selectedCourseId, // Kullanıcının seçtiği dersin ID'sini gönderiyoruz
+                courseId: selectedCourseId,
                 createdBy: userId
             )
             dismiss()

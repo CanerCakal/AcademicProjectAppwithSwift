@@ -11,7 +11,7 @@ struct TeacherDashboardView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(UIColor.systemGroupedBackground).ignoresSafeArea()
+                AppBackground()
 
                 if pendingProjects.isEmpty {
                     VStack(spacing: 16) {

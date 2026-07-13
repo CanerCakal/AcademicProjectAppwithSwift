@@ -5,8 +5,8 @@ enum RoleResolver {
     static let teacherRole = 2
     static let studentRole = 3
 
-    private static let studentDomains = ["ogr.universite.edu.tr"]
-    private static let teacherDomains = ["universite.edu.tr"]
+    private static let studentDomains = ["ogr.dpu.edu.tr"]
+    private static let teacherDomains = ["dpu.edu.tr"]
 
     static func role(for email: String) -> Int {
         let normalized = email.lowercased().trimmingCharacters(in: .whitespaces)

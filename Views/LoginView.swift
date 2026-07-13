@@ -92,6 +92,7 @@ struct LoginView: View {
                 Spacer(minLength: 40)
             }
         }
+        .background(AppBackground())
         .scrollDismissesKeyboard(.interactively)
         .animation(.easeOut(duration: 0.2), value: authViewModel.errorMessage)
         .sheet(isPresented: $showRegister) {

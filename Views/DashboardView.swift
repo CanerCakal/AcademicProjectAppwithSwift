@@ -3,26 +3,53 @@ import SwiftUI
 struct DashboardView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var projectViewModel = ProjectViewModel()
-
+    @StateObject private var courseViewModel = CourseViewModel()
+    
     @State private var showingAddProject = false
     @State private var projectToEdit: Project?
-
+    @State private var selectedCourseId: String? = nil
+    @State private var hasAppeared = false
+    
+    private var filteredProjects: [Project] {
+        guard let selectedCourseId else { return projectViewModel.projects }
+        return projectViewModel.projects.filter { $0.courseId == selectedCourseId }
+    }
+    
+    private var approvedCount: Int {
+        projectViewModel.projects.filter { $0.status == "approved" }.count
+    }
+    
+    private var pendingCount: Int {
+        projectViewModel.projects.filter { $0.status == "proposal" }.count
+    }
+    
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(UIColor.systemGroupedBackground).ignoresSafeArea()
-
-                if projectViewModel.projects.isEmpty {
-                    emptyState
-                } else {
-                    projectList
+                AppBackground()
+                
+                VStack(spacing: 0) {
+                    if !projectViewModel.projects.isEmpty {
+                        summaryStrip
+                        courseFilterBar
+                    }
+                    
+                    if filteredProjects.isEmpty {
+                        Spacer()
+                        emptyState
+                        Spacer()
+                    } else {
+                        projectList
+                    }
                 }
-
+                
                 floatingAddButton
             }
             .navigationTitle("Projeler")
             .task {
                 await projectViewModel.fetchProjects()
+                await courseViewModel.fetchCourses()
+                hasAppeared = true
             }
             .sheet(isPresented: $showingAddProject) {
                 AddProjectView(projectViewModel: projectViewModel)
@@ -33,31 +60,108 @@ struct DashboardView: View {
             }
         }
     }
-
+    
+    private var summaryStrip: some View {
+        HStack(spacing: 12) {
+            summaryPill(
+                value: projectViewModel.projects.count,
+                label: "Toplam",
+                color: .appPrimary
+            )
+            summaryPill(
+                value: approvedCount,
+                label: "Onaylı",
+                color: .statusApproved
+            )
+            summaryPill(
+                value: pendingCount,
+                label: "Beklemede",
+                color: .statusProposal
+            )
+        }
+        .padding(.horizontal)
+        .padding(.top, 8)
+    }
+    
+    private func summaryPill(value: Int, label: String, color: Color) -> some View {
+        VStack(spacing: 3) {
+            Text("\(value)")
+                .font(.title3.weight(.bold))
+                .foregroundStyle(color)
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 10)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+    
+    private var courseFilterBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                filterChip(title: "Tümü", isSelected: selectedCourseId == nil) {
+                    selectedCourseId = nil
+                }
+                
+                ForEach(courseViewModel.courses) { course in
+                    filterChip(
+                        title: course.courseCode,
+                        isSelected: selectedCourseId == course.id
+                    ) {
+                        selectedCourseId = course.id
+                    }
+                }
+            }
+            .padding(.horizontal)
+        }
+        .padding(.vertical, 12)
+    }
+    
+    private func filterChip(title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(isSelected ? .white : Color.appPrimary)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(isSelected ? Color.appPrimary : Color.appPrimary.opacity(0.12))
+                .clipShape(Capsule())
+        }
+        .buttonStyle(BouncyButtonStyle())
+        .animation(.easeOut(duration: 0.2), value: isSelected)
+    }
+    
     private var emptyState: some View {
         VStack(spacing: 16) {
-            Image(systemName: "folder.badge.plus")
+            Image(systemName: selectedCourseId == nil ? "folder.badge.plus" : "line.3.horizontal.decrease.circle")
                 .font(.system(size: 52))
                 .foregroundStyle(Color.appPrimary.opacity(0.5))
-
-            Text("Henüz proje yok")
+            
+            Text(selectedCourseId == nil ? "Henüz proje yok" : "Bu derste proje yok")
                 .font(.title3)
                 .fontWeight(.semibold)
-
-            Text("İlk projeni oluşturmak için sağ alttaki butona dokun.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
+            
+            Text(selectedCourseId == nil
+                 ? "İlk projeni oluşturmak için sağ alttaki butona dokun."
+                 : "Bu derse ait henüz bir proje eklenmemiş.")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 40)
         }
     }
-
+    
     private var projectList: some View {
         ScrollView {
             LazyVStack(spacing: 14) {
-                ForEach(projectViewModel.projects) { project in
+                ForEach(Array(filteredProjects.enumerated()), id: \.element.id) { index, project in
                     NavigationLink(destination: ProjectDetailView(project: project)) {
-                        ProjectCardView(project: project)
+                        ProjectCardView(
+                            project: project,
+                            courseCode: courseCode(for: project.courseId)
+                        )
                     }
                     .buttonStyle(CardButtonStyle())
                     .contextMenu {
@@ -67,7 +171,7 @@ struct DashboardView: View {
                             } label: {
                                 Label("Düzenle", systemImage: "pencil")
                             }
-
+                            
                             Button(role: .destructive) {
                                 Task {
                                     await projectViewModel.deleteProject(projectId: project.id ?? "")
@@ -77,14 +181,25 @@ struct DashboardView: View {
                             }
                         }
                     }
-                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+                    .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                    .opacity(hasAppeared ? 1 : 0)
+                    .offset(y: hasAppeared ? 0 : 20)
+                    .animation(
+                        .easeOut(duration: 0.35).delay(Double(index) * 0.05),
+                        value: hasAppeared
+                    )
                 }
             }
-            .padding()
-            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: projectViewModel.projects.count)
+            .padding(.horizontal)
+            .padding(.bottom, 90)
+            .animation(.spring(response: 0.35, dampingFraction: 0.85), value: filteredProjects.count)
         }
     }
-
+    
+    private func courseCode(for courseId: String) -> String? {
+        courseViewModel.courses.first { $0.id == courseId }?.courseCode
+    }
+    
     private var floatingAddButton: some View {
         VStack {
             Spacer()
@@ -112,7 +227,8 @@ struct DashboardView: View {
 
 struct ProjectCardView: View {
     var project: Project
-
+    var courseCode: String?
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top) {
@@ -120,9 +236,9 @@ struct ProjectCardView: View {
                     .font(.headline)
                     .foregroundStyle(.primary)
                     .multilineTextAlignment(.leading)
-
+                
                 Spacer(minLength: 8)
-
+                
                 Text(statusLabel(for: project.status))
                     .font(.caption)
                     .fontWeight(.semibold)
@@ -132,19 +248,33 @@ struct ProjectCardView: View {
                     .foregroundStyle(statusColor(for: project.status))
                     .clipShape(Capsule())
             }
-
+            
             Text(project.summary ?? "Bu proje için henüz bir özet girilmemiş.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-                .lineLimit(3)
+                .lineLimit(2)
                 .frame(maxWidth: .infinity, alignment: .leading)
+            
+            if let courseCode {
+                HStack(spacing: 6) {
+                    Image(systemName: "book.closed.fill")
+                        .font(.caption2)
+                    Text(courseCode)
+                        .font(.caption.weight(.medium))
+                }
+                .foregroundStyle(Color.appPrimary)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .background(Color.appPrimary.opacity(0.1))
+                .clipShape(Capsule())
+            }
         }
         .padding(16)
         .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 3)
     }
-
+    
     func statusColor(for status: String) -> Color {
         switch status.lowercased() {
         case "approved": return .statusApproved
@@ -154,7 +284,7 @@ struct ProjectCardView: View {
         default: return .gray
         }
     }
-
+    
     func statusLabel(for status: String) -> String {
         switch status.lowercased() {
         case "approved": return "Onaylandı"

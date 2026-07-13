@@ -27,7 +27,7 @@ struct AdminPanelView: View {
                     usersSection
                 }
             }
-            .background(Color(UIColor.systemGroupedBackground))
+            .background(AppBackground())
             .navigationTitle("Yönetim")
             .tint(.appPrimary)
             .task {

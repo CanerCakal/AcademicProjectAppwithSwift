@@ -112,7 +112,7 @@ struct ProjectDetailView: View {
             }
             .padding(20)
         }
-        .background(Color(UIColor.systemGroupedBackground))
+        .background(AppBackground())
         .navigationTitle("Proje Detayı")
         .navigationBarTitleDisplayMode(.inline)
         .animation(.easeOut(duration: 0.25), value: currentStatus)

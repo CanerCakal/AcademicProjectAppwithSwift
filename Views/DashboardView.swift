@@ -99,38 +99,50 @@ struct DashboardView: View {
     }
     
     private var courseFilterBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                filterChip(title: "Tümü", isSelected: selectedCourseId == nil) {
-                    selectedCourseId = nil
-                }
-                
-                ForEach(courseViewModel.courses) { course in
-                    filterChip(
-                        title: course.courseCode,
-                        isSelected: selectedCourseId == course.id
-                    ) {
-                        selectedCourseId = course.id
-                    }
+        Menu {
+            Button {
+                selectedCourseId = nil
+            } label: {
+                Label("Tüm Dersler", systemImage: selectedCourseId == nil ? "checkmark" : "")
+            }
+            
+            ForEach(courseViewModel.courses) { course in
+                Button {
+                    selectedCourseId = course.id
+                } label: {
+                    Label(
+                        "\(course.courseCode) · \(course.courseName)",
+                        systemImage: selectedCourseId == course.id ? "checkmark" : ""
+                    )
                 }
             }
-            .padding(.horizontal)
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                Text(selectedFilterLabel)
+                    .lineLimit(1)
+                Spacer()
+                Image(systemName: "chevron.down")
+                    .font(.caption)
+            }
+            .font(.subheadline.weight(.medium))
+            .foregroundStyle(Color.appPrimary)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(Color.appPrimary.opacity(0.1))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
+        .padding(.horizontal)
         .padding(.vertical, 12)
     }
     
-    private func filterChip(title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(title)
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(isSelected ? .white : Color.appPrimary)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(isSelected ? Color.appPrimary : Color.appPrimary.opacity(0.12))
-                .clipShape(Capsule())
+    private var selectedFilterLabel: String {
+        guard let selectedCourseId,
+              let course = courseViewModel.courses.first(where: { $0.id == selectedCourseId })
+        else {
+            return "Tüm Dersler"
         }
-        .buttonStyle(BouncyButtonStyle())
-        .animation(.easeOut(duration: 0.2), value: isSelected)
+        return "\(course.courseCode) · \(course.courseName)"
     }
     
     private var emptyState: some View {

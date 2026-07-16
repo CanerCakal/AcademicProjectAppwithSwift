@@ -5,6 +5,7 @@ import Combine
 @MainActor
 class CourseViewModel: ObservableObject {
     @Published var courses: [Course] = []
+    @Published var errorMessage: String?
     
     private var db = Firestore.firestore()
     
@@ -18,8 +19,19 @@ class CourseViewModel: ObservableObject {
     }
     
     func addCourse(courseCode: String, courseName: String, term: String) async {
+        let trimmedCode = courseCode.trimmingCharacters(in: .whitespaces).uppercased()
+        
+        let exists = courses.contains {
+            $0.courseCode.trimmingCharacters(in: .whitespaces).uppercased() == trimmedCode
+        }
+        
+        if exists {
+            self.errorMessage = "Bu ders kodu (\(trimmedCode)) zaten mevcut."
+            return
+        }
+        
         let newCourse = Course(
-            courseCode: courseCode,
+            courseCode: trimmedCode,
             courseName: courseName,
             term: term,
             departmentId: nil,
@@ -29,7 +41,7 @@ class CourseViewModel: ObservableObject {
             try db.collection("courses").addDocument(from: newCourse)
             await fetchCourses()
         } catch {
-            print("Ders eklenirken hata oluştu: \(error.localizedDescription)")
+            self.errorMessage = "Ders eklenirken hata oluştu: \(error.localizedDescription)"
         }
     }
 }

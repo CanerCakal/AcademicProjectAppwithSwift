@@ -3,13 +3,13 @@ import SwiftUI
 struct AdminPanelView: View {
     @StateObject private var courseViewModel = CourseViewModel()
     @StateObject private var userViewModel = UserViewModel()
-
+    
     @State private var selectedSection = 0
-
+    
     @State private var courseCode = ""
     @State private var courseName = ""
     @State private var term = ""
-
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -20,7 +20,7 @@ struct AdminPanelView: View {
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
                 .padding(.vertical, 12)
-
+                
                 if selectedSection == 0 {
                     coursesSection
                 } else {
@@ -36,15 +36,16 @@ struct AdminPanelView: View {
             }
         }
     }
-
+    
     private var coursesSection: some View {
         Form {
             Section("Yeni Ders Ekle") {
                 TextField("Ders Kodu (örn. BIL101)", text: $courseCode)
+                    .onChange(of: courseCode) { courseViewModel.errorMessage = nil }
                     .textInputAutocapitalization(.characters)
                 TextField("Ders Adı", text: $courseName)
                 TextField("Dönem (örn. 2025 Güz)", text: $term)
-
+                
                 Button {
                     Task {
                         await courseViewModel.addCourse(
@@ -63,11 +64,16 @@ struct AdminPanelView: View {
                             .fontWeight(.semibold)
                         Spacer()
                     }
+                    if let errorMessage = courseViewModel.errorMessage {
+                        Text(errorMessage)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
                 }
                 .foregroundStyle(Color.appPrimary)
                 .disabled(courseCode.isEmpty || courseName.isEmpty || term.isEmpty)
             }
-
+            
             Section("Mevcut Dersler") {
                 if courseViewModel.courses.isEmpty {
                     Text("Henüz ders yok")
@@ -78,7 +84,7 @@ struct AdminPanelView: View {
                             Image(systemName: "book.closed.fill")
                                 .foregroundStyle(Color.appPrimary)
                                 .frame(width: 28)
-
+                            
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(course.courseName)
                                     .font(.subheadline.weight(.semibold))
@@ -94,7 +100,7 @@ struct AdminPanelView: View {
         }
         .scrollContentBackground(.hidden)
     }
-
+    
     private var usersSection: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
@@ -109,7 +115,7 @@ struct AdminPanelView: View {
                                         .font(.subheadline.weight(.semibold))
                                         .foregroundStyle(Color.appPrimary)
                                 )
-
+                            
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(user.fullName)
                                     .font(.subheadline.weight(.semibold))
@@ -117,10 +123,10 @@ struct AdminPanelView: View {
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
-
+                            
                             Spacer()
                         }
-
+                        
                         Picker("Rol", selection: Binding(
                             get: { user.roleId },
                             set: { newRole in
@@ -146,7 +152,7 @@ struct AdminPanelView: View {
             .padding()
         }
     }
-
+    
     private func initials(for name: String) -> String {
         let parts = name.split(separator: " ")
         let letters = parts.prefix(2).compactMap { $0.first }

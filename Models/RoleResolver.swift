@@ -33,4 +33,12 @@ enum RoleResolver {
         }
         return studentDomains.contains(domain) || teacherDomains.contains(domain)
     }
+    
+    static func roleName(for roleId: Int) -> String {
+            switch roleId {
+            case adminRole: return "Yönetici"
+            case teacherRole: return "Akademisyen"
+            default: return "Öğrenci"
+            }
+        }
 }

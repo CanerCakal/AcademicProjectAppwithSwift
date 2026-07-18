@@ -9,6 +9,7 @@ struct AdminPanelView: View {
     @State private var courseCode = ""
     @State private var courseName = ""
     @State private var term = ""
+    @State private var selectedInstructorId: String? = nil
     
     var body: some View {
         NavigationStack {
@@ -46,16 +47,27 @@ struct AdminPanelView: View {
                 TextField("Ders Adı", text: $courseName)
                 TextField("Dönem (örn. 2025 Güz)", text: $term)
                 
+                Picker("Akademisyen", selection: $selectedInstructorId) {
+                    Text("Atanmadı").tag(String?.none)
+                    ForEach(userViewModel.teachers) { teacher in
+                        Text(teacher.fullName).tag(teacher.id as String?)
+                    }
+                }
+                
                 Button {
                     Task {
                         await courseViewModel.addCourse(
                             courseCode: courseCode,
                             courseName: courseName,
-                            term: term
+                            term: term,
+                            instructorId: selectedInstructorId
                         )
-                        courseCode = ""
-                        courseName = ""
-                        term = ""
+                        if courseViewModel.errorMessage == nil {
+                            courseCode = ""
+                            courseName = ""
+                            term = ""
+                            selectedInstructorId = nil
+                        }
                     }
                 } label: {
                     HStack {
@@ -64,14 +76,15 @@ struct AdminPanelView: View {
                             .fontWeight(.semibold)
                         Spacer()
                     }
-                    if let errorMessage = courseViewModel.errorMessage {
-                        Text(errorMessage)
-                            .font(.caption)
-                            .foregroundStyle(.red)
-                    }
                 }
                 .foregroundStyle(Color.appPrimary)
                 .disabled(courseCode.isEmpty || courseName.isEmpty || term.isEmpty)
+                
+                if let errorMessage = courseViewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
             }
             
             Section("Mevcut Dersler") {
@@ -80,18 +93,38 @@ struct AdminPanelView: View {
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(courseViewModel.courses) { course in
-                        HStack(spacing: 12) {
-                            Image(systemName: "book.closed.fill")
-                                .foregroundStyle(Color.appPrimary)
-                                .frame(width: 28)
-                            
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(course.courseName)
-                                    .font(.subheadline.weight(.semibold))
-                                Text("\(course.courseCode) · \(course.term)")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "book.closed.fill")
+                                    .foregroundStyle(Color.appPrimary)
+                                    .frame(width: 28)
+                                
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(course.courseName)
+                                        .font(.subheadline.weight(.semibold))
+                                    Text("\(course.courseCode) · \(course.term)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
+                            
+                            Picker("Akademisyen", selection: Binding(
+                                get: { course.ınstructorId },
+                                set: { newInstructor in
+                                    Task {
+                                        await courseViewModel.assignInstructor(
+                                            courseId: course.id ?? "",
+                                            instructorId: newInstructor
+                                        )
+                                    }
+                                }
+                            )) {
+                                Text("Atanmadı").tag(String?.none)
+                                ForEach(userViewModel.teachers) { teacher in
+                                    Text(teacher.fullName).tag(teacher.id as String?)
+                                }
+                            }
+                            .font(.caption)
                         }
                         .padding(.vertical, 4)
                     }

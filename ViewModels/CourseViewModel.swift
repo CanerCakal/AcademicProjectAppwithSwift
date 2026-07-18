@@ -18,7 +18,7 @@ class CourseViewModel: ObservableObject {
         }
     }
     
-    func addCourse(courseCode: String, courseName: String, term: String) async {
+    func addCourse(courseCode: String, courseName: String, term: String, instructorId: String?) async {
         let trimmedCode = courseCode.trimmingCharacters(in: .whitespaces).uppercased()
         
         let exists = courses.contains {
@@ -35,13 +35,24 @@ class CourseViewModel: ObservableObject {
             courseName: courseName,
             term: term,
             departmentId: nil,
-            ınstructorId: nil
+            ınstructorId: instructorId
         )
         do {
             try db.collection("courses").addDocument(from: newCourse)
             await fetchCourses()
         } catch {
             self.errorMessage = "Ders eklenirken hata oluştu: \(error.localizedDescription)"
+        }
+    }
+    
+    func assignInstructor(courseId: String, instructorId: String?) async {
+        do {
+            try await db.collection("courses").document(courseId).updateData([
+                "ınstructorId": instructorId as Any
+            ])
+            await fetchCourses()
+        } catch {
+            self.errorMessage = "Akademisyen atanırken hata oluştu: \(error.localizedDescription)"
         }
     }
 }

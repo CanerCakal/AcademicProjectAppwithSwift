@@ -3,15 +3,15 @@ import SwiftUI
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var showLogoutConfirm = false
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 AppBackground()
-
+                
                 if let user = authViewModel.currentUser {
                     VStack(spacing: 24) {
-
+                        
                         VStack(spacing: 16) {
                             Circle()
                                 .fill(Color.appPrimary.opacity(0.15))
@@ -21,12 +21,12 @@ struct ProfileView: View {
                                         .font(.system(size: 34, weight: .semibold))
                                         .foregroundStyle(Color.appPrimary)
                                 )
-
+                            
                             VStack(spacing: 6) {
                                 Text(user.fullName)
                                     .font(.title2)
                                     .fontWeight(.bold)
-
+                                
                                 Text(RoleResolver.roleName(for: user.roleId))
                                     .font(.subheadline.weight(.medium))
                                     .foregroundStyle(Color.appPrimary)
@@ -37,7 +37,7 @@ struct ProfileView: View {
                             }
                         }
                         .padding(.top, 40)
-
+                        
                         VStack(spacing: 0) {
                             infoRow(icon: "envelope.fill", label: "E-posta", value: user.email)
                             Divider().padding(.leading, 56)
@@ -51,9 +51,9 @@ struct ProfileView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                         .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 2)
                         .padding(.horizontal, 20)
-
+                        
                         Spacer()
-
+                        
                         Button {
                             showLogoutConfirm = true
                         } label: {
@@ -72,19 +72,17 @@ struct ProfileView: View {
                 }
             }
             .navigationTitle("Profilim")
-            .confirmationDialog(
-                "Çıkış yapmak istediğinize emin misiniz?",
-                isPresented: $showLogoutConfirm,
-                titleVisibility: .visible
-            ) {
+            .alert("Çıkış Yap", isPresented: $showLogoutConfirm) {
                 Button("Çıkış Yap", role: .destructive) {
                     authViewModel.logout()
                 }
                 Button("Vazgeç", role: .cancel) {}
+            } message: {
+                Text("Hesabınızdan çıkmak istediğinize emin misiniz?")
             }
         }
     }
-
+    
     private func infoRow(icon: String, label: String, value: String) -> some View {
         HStack(spacing: 14) {
             Image(systemName: icon)
@@ -93,7 +91,7 @@ struct ProfileView: View {
                 .frame(width: 42, height: 42)
                 .background(Color.appPrimary.opacity(0.12))
                 .clipShape(Circle())
-
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(label)
                     .font(.caption)
@@ -101,12 +99,12 @@ struct ProfileView: View {
                 Text(value)
                     .font(.subheadline.weight(.medium))
             }
-
+            
             Spacer()
         }
         .padding(14)
     }
-
+    
     private func initials(for name: String) -> String {
         let parts = name.split(separator: " ")
         let letters = parts.prefix(2).compactMap { $0.first }

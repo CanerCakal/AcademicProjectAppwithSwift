@@ -267,18 +267,34 @@ struct ProjectCardView: View {
                 .lineLimit(2)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            if let courseCode {
-                HStack(spacing: 6) {
-                    Image(systemName: "book.closed.fill")
-                        .font(.caption2)
-                    Text(courseCode)
-                        .font(.caption.weight(.medium))
+            HStack(spacing: 8) {
+                if let courseCode {
+                    HStack(spacing: 6) {
+                        Image(systemName: "book.closed.fill")
+                            .font(.caption2)
+                        Text(courseCode)
+                            .font(.caption.weight(.medium))
+                    }
+                    .foregroundStyle(Color.appPrimary)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Color.appPrimary.opacity(0.1))
+                    .clipShape(Capsule())
                 }
-                .foregroundStyle(Color.appPrimary)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 4)
-                .background(Color.appPrimary.opacity(0.1))
-                .clipShape(Capsule())
+                
+                if let count = project.commentCount, count > 0 {
+                    HStack(spacing: 6) {
+                        Image(systemName: "text.bubble.fill")
+                            .font(.caption2)
+                        Text("\(count)")
+                            .font(.caption.weight(.medium))
+                    }
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Color.gray.opacity(0.12))
+                    .clipShape(Capsule())
+                }
             }
         }
         .padding(16)

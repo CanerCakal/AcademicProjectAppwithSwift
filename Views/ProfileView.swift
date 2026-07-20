@@ -4,28 +4,28 @@ struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var projectViewModel = ProjectViewModel()
     @StateObject private var courseViewModel = CourseViewModel()
-
+    
     @State private var showLogoutConfirm = false
-
+    
     private var myProjects: [Project] {
         guard let myId = authViewModel.currentUser?.id else { return [] }
         return projectViewModel.projects.filter { $0.createdBy == myId }
     }
-
+    
     private var myCourses: [Course] {
         guard let myId = authViewModel.currentUser?.id else { return [] }
         return courseViewModel.courses.filter { $0.ınstructorId == myId }
     }
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 AppBackground()
-
+                
                 if let user = authViewModel.currentUser {
                     ScrollView {
                         VStack(spacing: 24) {
-
+                            
                             VStack(spacing: 16) {
                                 Circle()
                                     .fill(Color.appPrimary.opacity(0.15))
@@ -35,12 +35,12 @@ struct ProfileView: View {
                                             .font(.system(size: 34, weight: .semibold))
                                             .foregroundStyle(Color.appPrimary)
                                     )
-
+                                
                                 VStack(spacing: 6) {
                                     Text(user.fullName)
                                         .font(.title2)
                                         .fontWeight(.bold)
-
+                                    
                                     Text(RoleResolver.roleName(for: user.roleId))
                                         .font(.subheadline.weight(.medium))
                                         .foregroundStyle(Color.appPrimary)
@@ -51,7 +51,7 @@ struct ProfileView: View {
                                 }
                             }
                             .padding(.top, 40)
-
+                            
                             VStack(spacing: 0) {
                                 infoRow(icon: "envelope.fill", label: "E-posta", value: user.email)
                                 Divider().padding(.leading, 56)
@@ -65,7 +65,7 @@ struct ProfileView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 16))
                             .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 2)
                             .padding(.horizontal, 20)
-
+                            
                             if user.roleId == 3 {
                                 roleSection(
                                     title: "Projelerim",
@@ -82,7 +82,7 @@ struct ProfileView: View {
                                     }
                                 }
                             }
-
+                            
                             if user.roleId == 2 {
                                 roleSection(
                                     title: "Sorumlu Olduğum Dersler",
@@ -99,7 +99,7 @@ struct ProfileView: View {
                                     }
                                 }
                             }
-
+                            
                             Button {
                                 showLogoutConfirm = true
                             } label: {
@@ -134,7 +134,7 @@ struct ProfileView: View {
             }
         }
     }
-
+    
     private func roleSection<Content: View>(
         title: String,
         icon: String,
@@ -146,7 +146,7 @@ struct ProfileView: View {
             Label(title, systemImage: icon)
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Color.appPrimary)
-
+            
             if isEmpty {
                 Text(emptyText)
                     .font(.subheadline)
@@ -165,13 +165,13 @@ struct ProfileView: View {
         .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 2)
         .padding(.horizontal, 20)
     }
-
+    
     private func rowItem(title: String, subtitle: String, accent: Color) -> some View {
         HStack(spacing: 12) {
             RoundedRectangle(cornerRadius: 3)
                 .fill(accent)
                 .frame(width: 4, height: 36)
-
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.subheadline.weight(.medium))
@@ -180,11 +180,11 @@ struct ProfileView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-
+            
             Spacer()
         }
     }
-
+    
     private func infoRow(icon: String, label: String, value: String) -> some View {
         HStack(spacing: 14) {
             Image(systemName: icon)
@@ -193,7 +193,7 @@ struct ProfileView: View {
                 .frame(width: 42, height: 42)
                 .background(Color.appPrimary.opacity(0.12))
                 .clipShape(Circle())
-
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(label)
                     .font(.caption)
@@ -201,18 +201,18 @@ struct ProfileView: View {
                 Text(value)
                     .font(.subheadline.weight(.medium))
             }
-
+            
             Spacer()
         }
         .padding(14)
     }
-
+    
     private func initials(for name: String) -> String {
         let parts = name.split(separator: " ")
         let letters = parts.prefix(2).compactMap { $0.first }
         return String(letters).uppercased()
     }
-
+    
     private func statusColor(for status: String) -> Color {
         switch status.lowercased() {
         case "approved": return .statusApproved
@@ -222,7 +222,7 @@ struct ProfileView: View {
         default: return .gray
         }
     }
-
+    
     private func statusLabel(for status: String) -> String {
         switch status.lowercased() {
         case "approved": return "Onaylandı"

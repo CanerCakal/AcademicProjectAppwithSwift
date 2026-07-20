@@ -4,17 +4,17 @@ struct AddProjectView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel: AuthViewModel
     @ObservedObject var projectViewModel: ProjectViewModel
-
+    
     @StateObject private var courseViewModel = CourseViewModel()
-
+    
     @State private var title = ""
     @State private var summary = ""
     @State private var selectedCourseId = ""
-
+    
     private var isFormValid: Bool {
         !title.isEmpty && !summary.isEmpty && !selectedCourseId.isEmpty
     }
-
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -35,10 +35,10 @@ struct AddProjectView: View {
                         }
                     }
                 }
-
+                
                 Section("Proje Bilgileri") {
                     TextField("Proje Başlığı", text: $title)
-
+                    
                     ZStack(alignment: .topLeading) {
                         if summary.isEmpty {
                             Text("Proje özeti ve detayları...")
@@ -50,7 +50,7 @@ struct AddProjectView: View {
                             .frame(minHeight: 110)
                     }
                 }
-
+                
                 Section {
                     Button(action: saveProject) {
                         HStack {
@@ -79,10 +79,10 @@ struct AddProjectView: View {
             }
         }
     }
-
+    
     private func saveProject() {
         guard let user = authViewModel.currentUser, let userId = user.id else { return }
-
+        
         Task {
             await projectViewModel.addProject(
                 title: title,

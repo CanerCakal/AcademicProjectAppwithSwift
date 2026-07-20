@@ -22,6 +22,8 @@
 		109D161330018B9E0084E6EC /*  UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109D161230018B9E0084E6EC /*  UserViewModel.swift */; };
 		109ED7122FFC438D00340B0D /* TeacherDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109ED7112FFC438D00340B0D /* TeacherDashboardView.swift */; };
 		10A6A8992FF70BEB00A60179 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A6A8982FF70BE600A60179 /* RegisterView.swift */; };
+		10AF7360300EC4940056A485 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AF735F300EC4940056A485 /* Comment.swift */; };
+		10AF7362300EC4AD0056A485 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AF7361300EC4AD0056A485 /* CommentViewModel.swift */; };
 		10C57C8F2F7198EA00A5FA47 /* ProjectDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */; };
 		10C737372F7146F100079621 /* CourseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C737362F7146F100079621 /* CourseViewModel.swift */; };
 		10C737392F714D1300079621 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C737382F714D1300079621 /* ProfileView.swift */; };
@@ -46,6 +48,8 @@
 		109D161230018B9E0084E6EC /*  UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " UserViewModel.swift"; sourceTree = "<group>"; };
 		109ED7112FFC438D00340B0D /* TeacherDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherDashboardView.swift; sourceTree = "<group>"; };
 		10A6A8982FF70BE600A60179 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		10AF735F300EC4940056A485 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		10AF7361300EC4AD0056A485 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
 		10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailViewModel.swift; sourceTree = "<group>"; };
 		10C737362F7146F100079621 /* CourseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseViewModel.swift; sourceTree = "<group>"; };
 		10C737382F714D1300079621 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
@@ -103,6 +107,7 @@
 				1090E7E82F6C689E00CE9E81 /* Course.swift */,
 				1090E7EA2F6C690C00CE9E81 /* Project.swift */,
 				10652045300584FC005F502E /* RoleResolver.swift */,
+				10AF735F300EC4940056A485 /* Comment.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -115,6 +120,7 @@
 				10C737362F7146F100079621 /* CourseViewModel.swift */,
 				10C57C8E2F7198EA00A5FA47 /* ProjectDetailViewModel.swift */,
 				109D161230018B9E0084E6EC /*  UserViewModel.swift */,
+				10AF7361300EC4AD0056A485 /* CommentViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -216,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1090E7E92F6C689E00CE9E81 /* Course.swift in Sources */,
+				10AF7362300EC4AD0056A485 /* CommentViewModel.swift in Sources */,
 				10C7373B2F71665A00079621 /* AdminPanelView.swift in Sources */,
 				10C737392F714D1300079621 /* ProfileView.swift in Sources */,
 				1090E7EE2F6C6A3300CE9E81 /* AuthViewModel.swift in Sources */,
@@ -231,6 +238,7 @@
 				10652046300584FC005F502E /* RoleResolver.swift in Sources */,
 				109D161330018B9E0084E6EC /*  UserViewModel.swift in Sources */,
 				10C737372F7146F100079621 /* CourseViewModel.swift in Sources */,
+				10AF7360300EC4940056A485 /* Comment.swift in Sources */,
 				1090E7F12F6C6ECB00CE9E81 /* LoginView.swift in Sources */,
 				109ED7122FFC438D00340B0D /* TeacherDashboardView.swift in Sources */,
 				1090E7EB2F6C690C00CE9E81 /* Project.swift in Sources */,

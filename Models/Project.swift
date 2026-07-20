@@ -15,4 +15,5 @@ struct Project: Identifiable, Codable {
     var status: String
     var courseId: String
     var createdBy: String
+    var commentCount: Int?
 }

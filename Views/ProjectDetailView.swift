@@ -6,7 +6,9 @@ struct ProjectDetailView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var viewModel = ProjectDetailViewModel()
     @StateObject private var projectViewModel = ProjectViewModel()
+    @StateObject private var commentViewModel = CommentViewModel()
     
+    @State private var newCommentText = ""
     @State private var currentStatus: String
     @State private var showEditSheet = false
     
@@ -27,6 +29,10 @@ struct ProjectDetailView: View {
         isTeacher
         && currentStatus == "proposal"
         && viewModel.course?.ınstructorId == authViewModel.currentUser?.id
+    }
+    
+    private var canComment: Bool {
+        isTeacher && viewModel.course?.ınstructorId == authViewModel.currentUser?.id
     }
     
     var body: some View {
@@ -116,6 +122,8 @@ struct ProjectDetailView: View {
                     .buttonStyle(BouncyButtonStyle())
                 }
                 
+                commentsSection
+                
                 Spacer(minLength: 20)
             }
             .padding(20)
@@ -129,6 +137,7 @@ struct ProjectDetailView: View {
                 courseId: project.courseId,
                 studentId: project.createdBy
             )
+            await commentViewModel.fetchComments(projectId: project.id ?? "")
         }
         .sheet(isPresented: $showEditSheet) {
             EditProjectView(project: project)
@@ -190,6 +199,90 @@ struct ProjectDetailView: View {
         .padding(.vertical, 12)
         .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+    
+    private var commentsSection: some View {
+        infoCard {
+            VStack(alignment: .leading, spacing: 16) {
+                Label("Akademisyen Yorumları", systemImage: "text.bubble")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.appPrimary)
+                
+                if canComment {
+                    VStack(spacing: 10) {
+                        TextField("Yorum yaz...", text: $newCommentText, axis: .vertical)
+                            .lineLimit(2, reservesSpace: true)
+                            .padding(10)
+                            .background(Color(UIColor.tertiarySystemGroupedBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        
+                        Button {
+                            let text = newCommentText.trimmingCharacters(in: .whitespacesAndNewlines)
+                            guard !text.isEmpty,
+                                  let user = authViewModel.currentUser,
+                                  let userId = user.id else { return }
+                            Task {
+                                await commentViewModel.addComment(
+                                    projectId: project.id ?? "",
+                                    text: text,
+                                    authorId: userId,
+                                    authorName: user.fullName
+                                )
+                                newCommentText = ""
+                            }
+                        } label: {
+                            Text("Gönder")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.white)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 42)
+                                .background(Color.appPrimary)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        .buttonStyle(BouncyButtonStyle())
+                        .disabled(newCommentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .opacity(newCommentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.6 : 1)
+                    }
+                    
+                    if !commentViewModel.comments.isEmpty {
+                        Divider()
+                    }
+                }
+                
+                if commentViewModel.comments.isEmpty {
+                    Text("Henüz yorum yapılmamış.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    VStack(spacing: 12) {
+                        ForEach(commentViewModel.comments) { comment in
+                            commentRow(comment)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func commentRow(_ comment: Comment) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(comment.authorName)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.appPrimary)
+                Spacer()
+                Text(comment.createdAt, style: .date)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            Text(comment.text)
+                .font(.subheadline)
+                .foregroundStyle(.primary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(12)
+        .background(Color(UIColor.tertiarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
     
     private func infoCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {

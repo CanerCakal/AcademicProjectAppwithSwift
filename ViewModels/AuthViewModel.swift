@@ -9,40 +9,34 @@ class AuthViewModel: ObservableObject {
     @Published var isAuthenticated = false
     @Published var errorMessage: String?
     
-    // YENİ: Arayüzde "Yükleniyor" ikonlarını göstermek için
     @Published var isLoading = false
-    // YENİ: Uygulama ilk açıldığında hafızayı kontrol ederken ekranda Login sayfasının anlık parlamasını engellemek için
     @Published var isCheckingAuth = true
     
     private var db = Firestore.firestore()
     
-    // Uygulama açıldığı an (veya bu sınıf oluşturulduğu an) çalışacak ilk kod
     init() {
         checkAuthSession()
     }
     
-    // Firebase'in hafızasında açık bir oturum var mı diye dinleyen fonksiyon
     private func checkAuthSession() {
         Auth.auth().addStateDidChangeListener { [weak self] _, user in
             guard let self = self else { return }
             
             if let user = user {
-                // Hafızada kullanıcı var! Hemen Firestore'dan rolünü (Admin/Öğrenci) çek
                 Task {
                     await self.fetchUserRecord(uid: user.uid)
-                    self.isCheckingAuth = false // Kontrol bitti
+                    self.isCheckingAuth = false
                 }
             } else {
-                // Hafızada kullanıcı yok, Login ekranını göster
                 self.isAuthenticated = false
                 self.currentUser = nil
-                self.isCheckingAuth = false // Kontrol bitti
+                self.isCheckingAuth = false
             }
         }
     }
     
     func login(email: String, password: String) async {
-        self.isLoading = true // Butona basıldı, yükleniyor ikonunu yak!
+        self.isLoading = true
         self.errorMessage = nil
         
         do {
@@ -52,7 +46,7 @@ class AuthViewModel: ObservableObject {
             self.errorMessage = "Giriş başarısız: \(error.localizedDescription)"
         }
         
-        self.isLoading = false // İşlem bitti, ikonu söndür
+        self.isLoading = false
     }
     
     private func fetchUserRecord(uid: String) async {
@@ -63,7 +57,7 @@ class AuthViewModel: ObservableObject {
                 self.isAuthenticated = true
             } else {
                 self.errorMessage = "Kullanıcı profili veritabanında bulunamadı."
-                try? Auth.auth().signOut() // Hata varsa sahte oturumu kapat
+                try? Auth.auth().signOut()
             }
         } catch {
             self.errorMessage = "Bilgiler alınırken hata oluştu."
@@ -85,38 +79,32 @@ class AuthViewModel: ObservableObject {
             self.errorMessage = "Kayıt için kurumsal üniversite e-posta adresinizi kullanmalısınız."
             return
         }
-        self.isLoading = true          // Butona basıldı, yükleniyor çarkını yak
-        self.errorMessage = nil        // Önceki hata mesajı varsa temizle
+        self.isLoading = true
+        self.errorMessage = nil
         
         do {
-            // ADIM 1: Firebase Auth'a yeni kimlik oluşturmasını söyle.
-            // Başarılı olursa bize bir authResult döner, içinde user.uid var.
             let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
             let uid = authResult.user.uid
             
-            // ADIM 2: Bu uid'ye sahip yeni bir User profili hazırla.
-            // roleId'yi şimdilik 3 (Öğrenci) olarak sabitliyoruz — herkes öğrenci olarak kaydolur.
             let newUser = User(
-                id: uid,                // Firestore belgesinin id'si = Auth'un uid'si (iki dünyayı bağlayan anahtar!)
+                id: uid,
                 fullName: fullName,
                 email: email,
                 roleId: RoleResolver.role(for: email),
                 departmentId: departmentId
             )
             
-            // ADIM 3: Bu profili Firestore'da "users" koleksiyonuna, uid adlı belgeye yaz.
-            // setData(from:) modelimizi otomatik olarak JSON'a çevirip kaydeder.
             try db.collection("users").document(uid).setData(from: newUser)
             
-            // ADIM 4: Kayıt başarılı. Kullanıcıyı hemen giriş yapmış say ve içeri al.
+            
             self.currentUser = newUser
             self.isAuthenticated = true
             
         } catch {
-            // Auth ya da Firestore'da bir şey ters giderse (e-posta zaten var, şifre zayıf vs.)
+            
             self.errorMessage = "Kayıt başarısız: \(error.localizedDescription)"
         }
         
-        self.isLoading = false         // İşlem bitti, çarkı söndür
+        self.isLoading = false
     }
 }

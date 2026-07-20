@@ -3,18 +3,18 @@ import SwiftUI
 struct EditProjectView: View {
     @EnvironmentObject var projectViewModel: ProjectViewModel
     @Environment(\.dismiss) var dismiss
-
+    
     let project: Project
-
+    
     @State private var title: String
     @State private var summary: String
-
+    
     init(project: Project) {
         self.project = project
         _title = State(initialValue: project.title)
         _summary = State(initialValue: project.summary ?? "")
     }
-
+    
     var body: some View {
         NavigationStack {
             Form {

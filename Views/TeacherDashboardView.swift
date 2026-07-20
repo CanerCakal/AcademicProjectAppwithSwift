@@ -4,31 +4,31 @@ struct TeacherDashboardView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var projectViewModel = ProjectViewModel()
     @StateObject private var courseViewModel = CourseViewModel()
-
+    
     private var myCourseIds: [String] {
         guard let myId = authViewModel.currentUser?.id else { return [] }
         return courseViewModel.courses
             .filter { $0.ınstructorId == myId }
             .compactMap { $0.id }
     }
-
+    
     private var pendingProjects: [Project] {
         projectViewModel.projects.filter { $0.status == "proposal" }
     }
-
+    
     private func isMyCourse(_ project: Project) -> Bool {
         myCourseIds.contains(project.courseId)
     }
-
+    
     private func courseCode(for courseId: String) -> String? {
         courseViewModel.courses.first { $0.id == courseId }?.courseCode
     }
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 AppBackground()
-
+                
                 if pendingProjects.isEmpty {
                     emptyState
                 } else {
@@ -51,17 +51,17 @@ struct TeacherDashboardView: View {
             }
         }
     }
-
+    
     private var emptyState: some View {
         VStack(spacing: 16) {
             Image(systemName: "checkmark.seal")
                 .font(.system(size: 52))
                 .foregroundStyle(Color.appPrimary.opacity(0.5))
-
+            
             Text("Onay bekleyen yok")
                 .font(.title3)
                 .fontWeight(.semibold)
-
+            
             Text("Şu an incelenecek bir proje bulunmuyor.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -69,15 +69,15 @@ struct TeacherDashboardView: View {
                 .padding(.horizontal, 40)
         }
     }
-
+    
     private func pendingCard(for project: Project) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .top) {
                 Text(project.title)
                     .font(.headline)
-
+                
                 Spacer(minLength: 8)
-
+                
                 if let code = courseCode(for: project.courseId) {
                     Text(code)
                         .font(.caption.weight(.medium))
@@ -88,15 +88,15 @@ struct TeacherDashboardView: View {
                         .clipShape(Capsule())
                 }
             }
-
+            
             Text(project.summary ?? "Bu proje için özet girilmemiş.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(3)
                 .frame(maxWidth: .infinity, alignment: .leading)
-
+            
             Divider()
-
+            
             if isMyCourse(project) {
                 HStack(spacing: 12) {
                     Button {
@@ -116,7 +116,7 @@ struct TeacherDashboardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                     .buttonStyle(BouncyButtonStyle())
-
+                    
                     Button {
                         Task {
                             await projectViewModel.updateProjectStatus(

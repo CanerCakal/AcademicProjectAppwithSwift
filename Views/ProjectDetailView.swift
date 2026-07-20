@@ -2,31 +2,37 @@ import SwiftUI
 
 struct ProjectDetailView: View {
     let project: Project
-
+    
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var viewModel = ProjectDetailViewModel()
     @StateObject private var projectViewModel = ProjectViewModel()
-
+    
     @State private var currentStatus: String
     @State private var showEditSheet = false
-
+    
     init(project: Project) {
         self.project = project
         _currentStatus = State(initialValue: project.status)
     }
-
+    
     private var isOwner: Bool {
         project.createdBy == authViewModel.currentUser?.id
     }
-
+    
     private var isTeacher: Bool {
         authViewModel.currentUser?.roleId == 2
     }
-
+    
+    private var canApprove: Bool {
+        isTeacher
+        && currentStatus == "proposal"
+        && viewModel.course?.ınstructorId == authViewModel.currentUser?.id
+    }
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-
+                
                 VStack(alignment: .leading, spacing: 12) {
                     Text(statusLabel(for: currentStatus))
                         .font(.caption)
@@ -36,19 +42,19 @@ struct ProjectDetailView: View {
                         .background(statusColor(for: currentStatus).opacity(0.15))
                         .foregroundStyle(statusColor(for: currentStatus))
                         .clipShape(Capsule())
-
+                    
                     Text(project.title)
                         .font(.title)
                         .fontWeight(.bold)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-
+                
                 infoCard {
                     VStack(alignment: .leading, spacing: 10) {
                         Label("Proje Özeti", systemImage: "doc.text")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(Color.appPrimary)
-
+                        
                         Text(project.summary ?? "Bu proje için henüz bir özet girilmemiş.")
                             .font(.body)
                             .lineSpacing(5)
@@ -56,13 +62,13 @@ struct ProjectDetailView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-
+                
                 infoCard {
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Bağlantılı Bilgiler")
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(Color.appPrimary)
-
+                        
                         if viewModel.isLoading {
                             HStack(spacing: 8) {
                                 ProgressView()
@@ -75,11 +81,11 @@ struct ProjectDetailView: View {
                                 icon: "book.closed.fill",
                                 label: "Ders",
                                 value: viewModel.course.map { "\($0.courseCode) · \($0.courseName)" }
-                                    ?? "Ders bilgisi bulunamadı"
+                                ?? "Ders bilgisi bulunamadı"
                             )
-
+                            
                             Divider()
-
+                            
                             detailRow(
                                 icon: "person.fill",
                                 label: "Oluşturan",
@@ -88,11 +94,13 @@ struct ProjectDetailView: View {
                         }
                     }
                 }
-
-                if isTeacher && currentStatus == "proposal" {
+                
+                if canApprove {
                     teacherActions
+                } else if isTeacher && currentStatus == "proposal" {
+                    notMyCourseNotice
                 }
-
+                
                 if isOwner {
                     Button {
                         showEditSheet = true
@@ -107,7 +115,7 @@ struct ProjectDetailView: View {
                     }
                     .buttonStyle(BouncyButtonStyle())
                 }
-
+                
                 Spacer(minLength: 20)
             }
             .padding(20)
@@ -127,7 +135,7 @@ struct ProjectDetailView: View {
                 .environmentObject(projectViewModel)
         }
     }
-
+    
     private var teacherActions: some View {
         HStack(spacing: 12) {
             Button {
@@ -148,7 +156,7 @@ struct ProjectDetailView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
             .buttonStyle(BouncyButtonStyle())
-
+            
             Button {
                 Task {
                     await projectViewModel.updateProjectStatus(
@@ -169,7 +177,21 @@ struct ProjectDetailView: View {
             .buttonStyle(BouncyButtonStyle())
         }
     }
-
+    
+    private var notMyCourseNotice: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "lock.fill")
+                .font(.caption)
+            Text("Bu dersin sorumlusu değilsiniz")
+                .font(.subheadline)
+        }
+        .foregroundStyle(.secondary)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 12)
+        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+    
     private func infoCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
         content()
             .padding(16)
@@ -178,7 +200,7 @@ struct ProjectDetailView: View {
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 2)
     }
-
+    
     private func detailRow(icon: String, label: String, value: String) -> some View {
         HStack(spacing: 14) {
             Image(systemName: icon)
@@ -187,7 +209,7 @@ struct ProjectDetailView: View {
                 .frame(width: 32, height: 32)
                 .background(Color.appPrimary.opacity(0.12))
                 .clipShape(Circle())
-
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(label)
                     .font(.caption)
@@ -195,11 +217,11 @@ struct ProjectDetailView: View {
                 Text(value)
                     .font(.subheadline.weight(.medium))
             }
-
+            
             Spacer()
         }
     }
-
+    
     func statusColor(for status: String) -> Color {
         switch status.lowercased() {
         case "approved": return .statusApproved
@@ -209,7 +231,7 @@ struct ProjectDetailView: View {
         default: return .gray
         }
     }
-
+    
     func statusLabel(for status: String) -> String {
         switch status.lowercased() {
         case "approved": return "Onaylandı"

@@ -46,7 +46,7 @@ class ProjectViewModel: ObservableObject {
         let newProject = Project(
             title: title,
             summary: summary,
-            status: "proposal",
+            status: .proposal,
             courseId: courseId,
             createdBy: createdBy
         )
@@ -61,10 +61,10 @@ class ProjectViewModel: ObservableObject {
         }
     }
     
-    func updateProjectStatus(projectId: String, newStatus: String) async {
+    func updateProjectStatus(projectId: String, newStatus: ProjectStatus) async {
         do {
             try await db.collection("projects").document(projectId).updateData([
-                "status": newStatus
+                "status": newStatus.rawValue
             ])
             await fetchProjects()
         } catch {

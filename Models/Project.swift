@@ -12,7 +12,7 @@ struct Project: Identifiable, Codable {
     @DocumentID var id: String?
     var title: String
     var summary: String?
-    var status: String
+    var status: ProjectStatus
     var courseId: String
     var createdBy: String
     var commentCount: Int?

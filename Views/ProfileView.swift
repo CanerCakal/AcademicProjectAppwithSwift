@@ -76,8 +76,8 @@ struct ProfileView: View {
                                     ForEach(myProjects) { project in
                                         rowItem(
                                             title: project.title,
-                                            subtitle: statusLabel(for: project.status),
-                                            accent: statusColor(for: project.status)
+                                            subtitle: statusLabel(for: project.status.rawValue),
+                                            accent: statusColor(for: project.status.rawValue)
                                         )
                                     }
                                 }

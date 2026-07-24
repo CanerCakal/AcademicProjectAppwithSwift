@@ -16,11 +16,11 @@ struct DashboardView: View {
     }
     
     private var approvedCount: Int {
-        projectViewModel.projects.filter { $0.status == "approved" }.count
+        projectViewModel.projects.filter { $0.status == .approved }.count
     }
     
     private var pendingCount: Int {
-        projectViewModel.projects.filter { $0.status == "proposal" }.count
+        projectViewModel.projects.filter { $0.status == .proposal }.count
     }
     
     var body: some View {
@@ -251,13 +251,13 @@ struct ProjectCardView: View {
                 
                 Spacer(minLength: 8)
                 
-                Text(statusLabel(for: project.status))
+                Text(project.status.label)
                     .font(.caption)
                     .fontWeight(.semibold)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 5)
-                    .background(statusColor(for: project.status).opacity(0.15))
-                    .foregroundStyle(statusColor(for: project.status))
+                    .background(project.status.color.opacity(0.15))
+                    .foregroundStyle(project.status.color)
                     .clipShape(Capsule())
             }
             
@@ -301,26 +301,6 @@ struct ProjectCardView: View {
         .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: Color.black.opacity(0.06), radius: 8, x: 0, y: 3)
-    }
-    
-    func statusColor(for status: String) -> Color {
-        switch status.lowercased() {
-        case "approved": return .statusApproved
-        case "development": return .statusDevelopment
-        case "proposal": return .statusProposal
-        case "rejected": return .statusRejected
-        default: return .gray
-        }
-    }
-    
-    func statusLabel(for status: String) -> String {
-        switch status.lowercased() {
-        case "approved": return "Onaylandı"
-        case "development": return "Geliştirme"
-        case "proposal": return "Öneri"
-        case "rejected": return "Reddedildi"
-        default: return status.capitalized
-        }
     }
 }
 

@@ -13,7 +13,7 @@ struct TeacherDashboardView: View {
     }
     
     private var pendingProjects: [Project] {
-        projectViewModel.projects.filter { $0.status == "proposal" }
+        projectViewModel.projects.filter { $0.status == .proposal }
     }
     
     private func isMyCourse(_ project: Project) -> Bool {
@@ -103,7 +103,7 @@ struct TeacherDashboardView: View {
                         Task {
                             await projectViewModel.updateProjectStatus(
                                 projectId: project.id ?? "",
-                                newStatus: "approved"
+                                newStatus: .approved
                             )
                         }
                     } label: {
@@ -121,7 +121,7 @@ struct TeacherDashboardView: View {
                         Task {
                             await projectViewModel.updateProjectStatus(
                                 projectId: project.id ?? "",
-                                newStatus: "rejected"
+                                newStatus: .rejected
                             )
                         }
                     } label: {

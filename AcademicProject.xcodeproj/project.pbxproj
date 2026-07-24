@@ -67,6 +67,11 @@
 			path = AcademicProject;
 			sourceTree = "<group>";
 		};
+		10A09D1B3013FB50002D4E4E /* Services */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Services;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +90,7 @@
 		102CF1542F6AAD6000B3854E = {
 			isa = PBXGroup;
 			children = (
+				10A09D1B3013FB50002D4E4E /* Services */,
 				1090E7EF2F6C6EB100CE9E81 /* Views */,
 				1090E7EC2F6C6A0E00CE9E81 /* ViewModels */,
 				1090E7E32F6C673D00CE9E81 /* Models */,
@@ -162,6 +168,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				102CF15F2F6AAD6000B3854E /* AcademicProject */,
+				10A09D1B3013FB50002D4E4E /* Services */,
 			);
 			name = AcademicProject;
 			packageProductDependencies = (

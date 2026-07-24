@@ -28,11 +28,11 @@ struct ProjectDetailView: View {
     private var canApprove: Bool {
         isTeacher
         && currentStatus == "proposal"
-        && viewModel.course?.ınstructorId == authViewModel.currentUser?.id
+        && viewModel.course?.instructorId == authViewModel.currentUser?.id
     }
     
     private var canComment: Bool {
-        isTeacher && viewModel.course?.ınstructorId == authViewModel.currentUser?.id
+        isTeacher && viewModel.course?.instructorId == authViewModel.currentUser?.id
     }
     
     var body: some View {

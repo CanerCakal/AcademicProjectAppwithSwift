@@ -14,7 +14,7 @@ struct ProfileView: View {
     
     private var myCourses: [Course] {
         guard let myId = authViewModel.currentUser?.id else { return [] }
-        return courseViewModel.courses.filter { $0.ınstructorId == myId }
+        return courseViewModel.courses.filter { $0.instructorId == myId }
     }
     
     var body: some View {

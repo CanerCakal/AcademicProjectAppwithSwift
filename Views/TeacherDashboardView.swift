@@ -8,7 +8,7 @@ struct TeacherDashboardView: View {
     private var myCourseIds: [String] {
         guard let myId = authViewModel.currentUser?.id else { return [] }
         return courseViewModel.courses
-            .filter { $0.ınstructorId == myId }
+            .filter { $0.instructorId == myId }
             .compactMap { $0.id }
     }
     

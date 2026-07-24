@@ -35,7 +35,7 @@ class CourseViewModel: ObservableObject {
             courseName: courseName,
             term: term,
             departmentId: nil,
-            ınstructorId: instructorId
+            instructorId: instructorId
         )
         do {
             try db.collection("courses").addDocument(from: newCourse)
@@ -48,7 +48,7 @@ class CourseViewModel: ObservableObject {
     func assignInstructor(courseId: String, instructorId: String?) async {
         do {
             try await db.collection("courses").document(courseId).updateData([
-                "ınstructorId": instructorId as Any
+                "instructorId": instructorId as Any
             ])
             await fetchCourses()
         } catch {

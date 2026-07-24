@@ -14,5 +14,5 @@ struct Course: Identifiable, Codable {
     var courseName: String
     var term: String
     var departmentId: String?
-    var ınstructorId: String?
+    var instructorId: String?
 }

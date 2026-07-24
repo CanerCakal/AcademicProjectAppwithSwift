@@ -109,7 +109,7 @@ struct AdminPanelView: View {
                             }
                             
                             Picker("Akademisyen", selection: Binding(
-                                get: { course.ınstructorId },
+                                get: { course.instructorId },
                                 set: { newInstructor in
                                     Task {
                                         await courseViewModel.assignInstructor(

@@ -34,6 +34,16 @@
 		10CA2D0E30003CBC00783A14 /*  EditProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CA2D0D30003CBC00783A14 /*  EditProjectView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		10EC661A30185ADF007FBFB1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 102CF1552F6AAD6000B3854E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 102CF15C2F6AAD6000B3854E;
+			remoteInfo = AcademicProject;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		102CF15D2F6AAD6000B3854E /* AcademicProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AcademicProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10652045300584FC005F502E /* RoleResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoleResolver.swift; sourceTree = "<group>"; };
@@ -59,17 +69,23 @@
 		10C7373C2F71672500079621 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		10C7373E2F716CC500079621 /* ProjectDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectDetailView.swift; sourceTree = "<group>"; };
 		10CA2D0D30003CBC00783A14 /*  EditProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " EditProjectView.swift"; sourceTree = "<group>"; };
+		10EC661630185ADF007FBFB1 /* AcademicProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AcademicProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		102CF15F2F6AAD6000B3854E /* AcademicProject */ = {
+		10A09D1B3013FB50002D4E4E /* Services */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		10EC65E6301859D5007FBFB1 /* AcademicProject */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = AcademicProject;
 			sourceTree = "<group>";
 		};
-		10A09D1B3013FB50002D4E4E /* Services */ = {
+		10EC661730185ADF007FBFB1 /* AcademicProjectTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Services;
+			path = AcademicProjectTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -84,6 +100,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		10EC661330185ADF007FBFB1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -94,7 +117,8 @@
 				1090E7EF2F6C6EB100CE9E81 /* Views */,
 				1090E7EC2F6C6A0E00CE9E81 /* ViewModels */,
 				1090E7E32F6C673D00CE9E81 /* Models */,
-				102CF15F2F6AAD6000B3854E /* AcademicProject */,
+				10EC65E6301859D5007FBFB1 /* AcademicProject */,
+				10EC661730185ADF007FBFB1 /* AcademicProjectTests */,
 				102CF15E2F6AAD6000B3854E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				102CF15D2F6AAD6000B3854E /* AcademicProject.app */,
+				10EC661630185ADF007FBFB1 /* AcademicProjectTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -167,8 +192,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				102CF15F2F6AAD6000B3854E /* AcademicProject */,
 				10A09D1B3013FB50002D4E4E /* Services */,
+				10EC65E6301859D5007FBFB1 /* AcademicProject */,
 			);
 			name = AcademicProject;
 			packageProductDependencies = (
@@ -179,6 +204,29 @@
 			productReference = 102CF15D2F6AAD6000B3854E /* AcademicProject.app */;
 			productType = "com.apple.product-type.application";
 		};
+		10EC661530185ADF007FBFB1 /* AcademicProjectTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 10EC661C30185ADF007FBFB1 /* Build configuration list for PBXNativeTarget "AcademicProjectTests" */;
+			buildPhases = (
+				10EC661230185ADF007FBFB1 /* Sources */,
+				10EC661330185ADF007FBFB1 /* Frameworks */,
+				10EC661430185ADF007FBFB1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				10EC661B30185ADF007FBFB1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				10EC661730185ADF007FBFB1 /* AcademicProjectTests */,
+			);
+			name = AcademicProjectTests;
+			packageProductDependencies = (
+			);
+			productName = AcademicProjectTests;
+			productReference = 10EC661630185ADF007FBFB1 /* AcademicProjectTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -186,11 +234,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2650;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					102CF15C2F6AAD6000B3854E = {
 						CreatedOnToolsVersion = 26.3;
+					};
+					10EC661530185ADF007FBFB1 = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = 102CF15C2F6AAD6000B3854E;
 					};
 				};
 			};
@@ -212,12 +264,20 @@
 			projectRoot = "";
 			targets = (
 				102CF15C2F6AAD6000B3854E /* AcademicProject */,
+				10EC661530185ADF007FBFB1 /* AcademicProjectTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		102CF15B2F6AAD6000B3854E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		10EC661430185ADF007FBFB1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -257,7 +317,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		10EC661230185ADF007FBFB1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		10EC661B30185ADF007FBFB1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 102CF15C2F6AAD6000B3854E /* AcademicProject */;
+			targetProxy = 10EC661A30185ADF007FBFB1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		102CF1662F6AAD6100B3854E /* Debug */ = {
@@ -441,6 +516,48 @@
 			};
 			name = Release;
 		};
+		10EC661D30185ADF007FBFB1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.caner.AcademicProjectTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AcademicProject.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AcademicProject";
+			};
+			name = Debug;
+		};
+		10EC661E30185ADF007FBFB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.caner.AcademicProjectTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AcademicProject.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AcademicProject";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -458,6 +575,15 @@
 			buildConfigurations = (
 				102CF1692F6AAD6100B3854E /* Debug */,
 				102CF16A2F6AAD6100B3854E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		10EC661C30185ADF007FBFB1 /* Build configuration list for PBXNativeTarget "AcademicProjectTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				10EC661D30185ADF007FBFB1 /* Debug */,
+				10EC661E30185ADF007FBFB1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

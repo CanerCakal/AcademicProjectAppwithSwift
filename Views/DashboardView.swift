@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DashboardView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @StateObject private var projectViewModel = ProjectViewModel()
+    @EnvironmentObject var projectViewModel: ProjectViewModel
     @StateObject private var courseViewModel = CourseViewModel()
     
     @State private var showingAddProject = false
@@ -47,7 +47,6 @@ struct DashboardView: View {
             }
             .navigationTitle("Projeler")
             .task {
-                await projectViewModel.fetchProjects()
                 await courseViewModel.fetchCourses()
                 hasAppeared = true
             }

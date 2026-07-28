@@ -8,17 +8,24 @@ class ProjectViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let service: ProjectServiceProtocol
+    private var listenerTask: Task<Void, Never>?
 
     init(service: ProjectServiceProtocol = FirestoreProjectService()) {
         self.service = service
     }
 
-    func fetchProjects() async {
-        do {
-            self.projects = try await service.fetchProjects()
-        } catch {
-            self.errorMessage = "Projeler yüklenirken hata oluştu: \(error.localizedDescription)"
+    func startListening() {
+        listenerTask?.cancel()
+        listenerTask = Task {
+            for await updatedProjects in service.projectsStream() {
+                self.projects = updatedProjects
+            }
         }
+    }
+
+    func stopListening() {
+        listenerTask?.cancel()
+        listenerTask = nil
     }
 
     func addProject(
@@ -37,7 +44,6 @@ class ProjectViewModel: ObservableObject {
 
         do {
             try await service.addProject(newProject)
-            await fetchProjects()
         } catch {
             self.errorMessage = "Proje kaydedilemedi: \(error.localizedDescription)"
         }
@@ -46,7 +52,6 @@ class ProjectViewModel: ObservableObject {
     func updateProjectStatus(projectId: String, newStatus: ProjectStatus) async {
         do {
             try await service.updateStatus(projectId: projectId, newStatus: newStatus)
-            await fetchProjects()
         } catch {
             self.errorMessage = "Durum güncellenirken hata oluştu: \(error.localizedDescription)"
         }
@@ -55,7 +60,6 @@ class ProjectViewModel: ObservableObject {
     func deleteProject(projectId: String) async {
         do {
             try await service.deleteProject(projectId: projectId)
-            await fetchProjects()
         } catch {
             self.errorMessage = "Proje silinirken hata oluştu: \(error.localizedDescription)"
         }
@@ -64,9 +68,12 @@ class ProjectViewModel: ObservableObject {
     func updateProject(projectId: String, title: String, summary: String) async {
         do {
             try await service.updateProject(projectId: projectId, title: title, summary: summary)
-            await fetchProjects()
         } catch {
             self.errorMessage = "Proje güncellenirken hata oluştu: \(error.localizedDescription)"
         }
+    }
+
+    deinit {
+        listenerTask?.cancel()
     }
 }

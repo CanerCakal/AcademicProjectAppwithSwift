@@ -2,7 +2,8 @@ import SwiftUI
 
 struct MainTabView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    
+    @StateObject private var projectViewModel = ProjectViewModel()
+
     var body: some View {
         if let user = authViewModel.currentUser {
             TabView {
@@ -31,6 +32,10 @@ struct MainTabView: View {
                     }
             }
             .tint(.appPrimary)
+            .environmentObject(projectViewModel)
+            .task {
+                projectViewModel.startListening()
+            }
         } else {
             ProgressView("Veriler Yükleniyor...")
         }

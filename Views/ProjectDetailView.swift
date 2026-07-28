@@ -5,7 +5,7 @@ struct ProjectDetailView: View {
     
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var viewModel = ProjectDetailViewModel()
-    @StateObject private var projectViewModel = ProjectViewModel()
+    @EnvironmentObject var projectViewModel: ProjectViewModel
     @StateObject private var commentViewModel = CommentViewModel()
     
     @State private var newCommentText = ""
@@ -26,10 +26,10 @@ struct ProjectDetailView: View {
     }
     
     private var canApprove: Bool {
-            isTeacher
-            && currentStatus == .proposal
-            && viewModel.course?.instructorId == authViewModel.currentUser?.id
-        }
+        isTeacher
+        && currentStatus == .proposal
+        && viewModel.course?.instructorId == authViewModel.currentUser?.id
+    }
     
     private var canComment: Bool {
         isTeacher && viewModel.course?.instructorId == authViewModel.currentUser?.id
@@ -41,13 +41,13 @@ struct ProjectDetailView: View {
                 
                 VStack(alignment: .leading, spacing: 12) {
                     Text(currentStatus.label)
-                                            .font(.caption)
-                                            .fontWeight(.semibold)
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 5)
-                                            .background(currentStatus.color.opacity(0.15))
-                                            .foregroundStyle(currentStatus.color)
-                                            .clipShape(Capsule())
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 5)
+                        .background(currentStatus.color.opacity(0.15))
+                        .foregroundStyle(currentStatus.color)
+                        .clipShape(Capsule())
                     
                     Text(project.title)
                         .font(.title)
@@ -146,46 +146,46 @@ struct ProjectDetailView: View {
     }
     
     private var teacherActions: some View {
-            HStack(spacing: 12) {
-                Button {
-                    Task {
-                        await projectViewModel.updateProjectStatus(
-                            projectId: project.id ?? "",
-                            newStatus: .approved
-                        )
-                        currentStatus = .approved
-                    }
-                } label: {
-                    Label("Onayla", systemImage: "checkmark")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 48)
-                        .background(Color.statusApproved)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+        HStack(spacing: 12) {
+            Button {
+                Task {
+                    await projectViewModel.updateProjectStatus(
+                        projectId: project.id ?? "",
+                        newStatus: .approved
+                    )
+                    currentStatus = .approved
                 }
-                .buttonStyle(BouncyButtonStyle())
-                
-                Button {
-                    Task {
-                        await projectViewModel.updateProjectStatus(
-                            projectId: project.id ?? "",
-                            newStatus: .rejected
-                        )
-                        currentStatus = .rejected
-                    }
-                } label: {
-                    Label("Reddet", systemImage: "xmark")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Color.statusRejected)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 48)
-                        .background(Color.statusRejected.opacity(0.12))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
-                .buttonStyle(BouncyButtonStyle())
+            } label: {
+                Label("Onayla", systemImage: "checkmark")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .background(Color.statusApproved)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+            .buttonStyle(BouncyButtonStyle())
+            
+            Button {
+                Task {
+                    await projectViewModel.updateProjectStatus(
+                        projectId: project.id ?? "",
+                        newStatus: .rejected
+                    )
+                    currentStatus = .rejected
+                }
+            } label: {
+                Label("Reddet", systemImage: "xmark")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.statusRejected)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .background(Color.statusRejected.opacity(0.12))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(BouncyButtonStyle())
         }
+    }
     
     private var notMyCourseNotice: some View {
         HStack(spacing: 8) {

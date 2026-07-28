@@ -2,7 +2,7 @@ import SwiftUI
 
 struct TeacherDashboardView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @StateObject private var projectViewModel = ProjectViewModel()
+    @EnvironmentObject var projectViewModel: ProjectViewModel
     @StateObject private var courseViewModel = CourseViewModel()
     
     private var myCourseIds: [String] {
@@ -46,7 +46,6 @@ struct TeacherDashboardView: View {
             }
             .navigationTitle("Onay Bekleyenler")
             .task {
-                await projectViewModel.fetchProjects()
                 await courseViewModel.fetchCourses()
             }
         }

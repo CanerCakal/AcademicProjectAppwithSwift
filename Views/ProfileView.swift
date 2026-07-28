@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @StateObject private var projectViewModel = ProjectViewModel()
+    @EnvironmentObject var projectViewModel: ProjectViewModel
     @StateObject private var courseViewModel = CourseViewModel()
     
     @State private var showLogoutConfirm = false
@@ -76,8 +76,8 @@ struct ProfileView: View {
                                     ForEach(myProjects) { project in
                                         rowItem(
                                             title: project.title,
-                                            subtitle: statusLabel(for: project.status.rawValue),
-                                            accent: statusColor(for: project.status.rawValue)
+                                            subtitle: project.status.label,
+                                            accent: project.status.color
                                         )
                                     }
                                 }
@@ -121,7 +121,6 @@ struct ProfileView: View {
             }
             .navigationTitle("Profilim")
             .task {
-                await projectViewModel.fetchProjects()
                 await courseViewModel.fetchCourses()
             }
             .alert("Çıkış Yap", isPresented: $showLogoutConfirm) {
@@ -211,25 +210,5 @@ struct ProfileView: View {
         let parts = name.split(separator: " ")
         let letters = parts.prefix(2).compactMap { $0.first }
         return String(letters).uppercased()
-    }
-    
-    private func statusColor(for status: String) -> Color {
-        switch status.lowercased() {
-        case "approved": return .statusApproved
-        case "development": return .statusDevelopment
-        case "proposal": return .statusProposal
-        case "rejected": return .statusRejected
-        default: return .gray
-        }
-    }
-    
-    private func statusLabel(for status: String) -> String {
-        switch status.lowercased() {
-        case "approved": return "Onaylandı"
-        case "development": return "Geliştirme"
-        case "proposal": return "Öneri"
-        case "rejected": return "Reddedildi"
-        default: return status.capitalized
-        }
     }
 }

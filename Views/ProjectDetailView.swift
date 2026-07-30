@@ -137,7 +137,7 @@ struct ProjectDetailView: View {
                 courseId: project.courseId,
                 studentId: project.createdBy
             )
-            await commentViewModel.fetchComments(projectId: project.id ?? "")
+            commentViewModel.startListening(projectId: project.id ?? "")
         }
         .sheet(isPresented: $showEditSheet) {
             EditProjectView(project: project)

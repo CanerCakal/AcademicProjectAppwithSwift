@@ -44,7 +44,17 @@ final class FirestoreProjectService: ProjectServiceProtocol {
     }
     
     func deleteProject(projectId: String) async throws {
-        try await db.collection(collectionName).document(projectId).delete()
+        let projectRef = db.collection(collectionName).document(projectId)
+        
+        let commentsSnapshot = try await projectRef.collection("comments").getDocuments()
+        
+        let batch = db.batch()
+        for document in commentsSnapshot.documents {
+            batch.deleteDocument(document.reference)
+        }
+        batch.deleteDocument(projectRef)
+        
+        try await batch.commit()
     }
     
     func projectsStream() -> AsyncStream<[Project]> {

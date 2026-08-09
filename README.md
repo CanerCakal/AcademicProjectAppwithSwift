@@ -8,15 +8,11 @@ An iOS application for organizing and tracking academic course projects, built w
 
 ## Screenshots
 
-| Login | Student Dashboard | Teacher Approvals |
 <p align="center">
   <img src="Screenshots/Login.png" width="250">
   <img src="Screenshots/StudentDashboard.png" width="250">
 </p>
 
-<p align="center">
-  <img src="Screenshots/TeacherApprovals.png" width="250">
-</p>
 <!-- Replace the placeholders above with real screenshots, e.g.:
 | ![Login](docs/login.png) | ![Dashboard](docs/dashboard.png) | ... |
 -->

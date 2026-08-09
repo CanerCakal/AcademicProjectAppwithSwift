@@ -8,9 +8,9 @@ An iOS application for organizing and tracking academic course projects, built w
 
 ## Screenshots
 
-| Login | Student Dashboard | Teacher Approvals | Admin Panel |
+| Login | Student Dashboard | Teacher Approvals |
 |:---:|:---:|:---:|:---:|
-|  |  |  |  |
+| ![Login](Screenshots/Login.png) | ![StudentDashboard](Screenshots/StudentDashboard.png) | ![TeacherApprovals](Screenshots/TeacherApprovals.png) |
 
 <!-- Replace the placeholders above with real screenshots, e.g.:
 | ![Login](docs/login.png) | ![Dashboard](docs/dashboard.png) | ... |

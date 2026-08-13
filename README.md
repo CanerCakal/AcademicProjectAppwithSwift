@@ -13,10 +13,6 @@ An iOS application for organizing and tracking academic course projects, built w
   <img src="Screenshots/StudentDashboard.png" width="250">
 </p>
 
-<!-- Replace the placeholders above with real screenshots, e.g.:
-| ![Login](docs/login.png) | ![Dashboard](docs/dashboard.png) | ... |
--->
-
 ---
 
 ## Features
